@@ -1,0 +1,42 @@
+<div class="grid">
+  <div class="grid__item large--one-half small--text-center">
+
+    {% comment %}
+      This form must use 'reset_customer_password'
+    {% endcomment %}
+    <div class="note form-success" id="ResetSuccess" style="display:none;">
+      Your password has been reset successfully
+    </div>
+
+    <form action="/account/reset" method="post">
+      <input type="hidden" name="_token" value="{% csrf %}">
+
+      <div class="section-header">
+        <h1 class="section-header__title">{{ 'customer.reset_password.title' | t }}</h1>
+      </div>
+
+      <p>{{ 'customer.reset_password.subtext' | t: email }}</p>
+
+      {{ form.errors | default_errors }}
+
+      <label for="ResetPassword">{{ 'customer.reset_password.password' | t }}</label>
+      <input type="password" value="" name="customer[password]" id="ResetPassword">
+
+      <label for="PasswordConfirmation">{{ 'customer.reset_password.password_confirm' | t }}</label>
+      <input type="password" value="" name="customer[password_confirmation]" id="PasswordConfirmation">
+
+      <input type="hidden" name="reset_token" value="{{token}}" >
+      <input type="hidden" name="email" value="{{email}}" >
+      <p>
+        <input type="submit" class="btn" value="{{ 'customer.reset_password.submit' | t }}">
+      </p>
+
+    </form>
+
+  </div>
+</div>
+<script>
+{% if reset_success %}
+  document.getElementById('ResetSuccess').style.display = 'block';
+{% endif %}
+</script>

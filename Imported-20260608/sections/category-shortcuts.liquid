@@ -1,0 +1,244 @@
+<style>
+  .category-shortcuts {
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+    background-color: {{ section.settings.bg_color }};
+  }
+
+  .category-shortcuts__title {
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin: 0 0 1.6rem;
+    padding: 0 1.6rem;
+    color: rgb(var(--color-foreground));
+  }
+
+  .category-shortcuts__track {
+    display: flex;
+    gap: {{ section.settings.item_gap }}px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 0.4rem 2rem 0.8rem;
+  }
+
+  .category-shortcuts__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .category-shortcuts__item {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    text-decoration: none;
+    color: rgb(var(--color-foreground));
+    width: {{ section.settings.icon_size }}px;
+  }
+
+  .category-shortcuts__image-wrapper {
+    width: {{ section.settings.icon_size }}px;
+    height: {{ section.settings.icon_size }}px;
+    border-radius: {% if section.settings.shape == 'circle' %}50%{% else %}1.2rem{% endif %};
+    overflow: hidden;
+    background-color: rgba(var(--color-foreground), 0.06);
+    flex-shrink: 0;
+    border: 2px solid transparent;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .category-shortcuts__item:hover .category-shortcuts__image-wrapper,
+  .category-shortcuts__item:active .category-shortcuts__image-wrapper {
+    border-color: {{ section.settings.accent_color }};
+    transform: scale(1.04);
+  }
+
+  .category-shortcuts__image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .category-shortcuts__image-wrapper .category-shortcuts__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.4rem;
+    background-color: rgba(var(--color-foreground), 0.06);
+  }
+
+  .category-shortcuts__label {
+    font-size: 1.2rem;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.3;
+    word-break: break-word;
+    color: rgb(var(--color-foreground));
+    max-width: {{ section.settings.icon_size }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .category-shortcuts__track {
+      justify-content: center;
+      overflow-x: visible;
+      flex-wrap: wrap;
+    }
+  }
+</style>
+
+{% if section.blocks_order.size > 0 %}
+<div class="category-shortcuts">
+  {% if section.settings.title != blank %}
+    <h2 class="category-shortcuts__title">{{ section.settings.title | escape }}</h2>
+  {% endif %}
+
+  <div class="category-shortcuts__track">
+    {% for block_handle in section.blocks_order %}
+      {% assign blocks = section.blocks %}
+      {% assign block = blocks[block_handle] %}
+      {% assign item = block.settings %}
+      {% if item.label != blank or item.image != blank %}
+        <a class="category-shortcuts__item" href="{{ item.link | default: '#' }}">
+          <div class="category-shortcuts__image-wrapper">
+            {% if item.image != blank %}
+              <img
+                src="{{ item.image | img_url: '200x200', crop: 'center' }}"
+                alt="{{ item.label | escape }}"
+                width="{{ section.settings.icon_size }}"
+                height="{{ section.settings.icon_size }}"
+                {% if forloop.index <= 6 %}loading="eager"{% else %}loading="lazy"{% endif %}
+              >
+            {% else %}
+              <div class="category-shortcuts__placeholder">{{ item.emoji | default: '🏷️' }}</div>
+            {% endif %}
+          </div>
+          {% if item.label != blank %}
+            <span class="category-shortcuts__label">{{ item.label | escape }}</span>
+          {% endif %}
+        </a>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{% schema %}
+{
+  "name": { "en_US": "Category Shortcuts", "zh_TW": "分類圖示捷徑" },
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": { "en_US": "Section Title", "zh_TW": "區塊標題" },
+      "default": { "en_US": "", "zh_TW": "" }
+    },
+    {
+      "type": "select",
+      "id": "shape",
+      "label": { "en_US": "Icon Shape", "zh_TW": "圖示形狀" },
+      "options": [
+        { "value": "circle", "label": { "en_US": "Circle", "zh_TW": "圓形" } },
+        { "value": "rounded", "label": { "en_US": "Rounded Square", "zh_TW": "圓角方形" } }
+      ],
+      "default": "circle"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": { "en_US": "Icon Size (px)", "zh_TW": "圖示大小 (px)" },
+      "min": 56,
+      "max": 100,
+      "step": 4,
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "item_gap",
+      "label": { "en_US": "Item Spacing (px)", "zh_TW": "間距 (px)" },
+      "min": 8,
+      "max": 32,
+      "step": 4,
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": { "en_US": "Hover Accent Color", "zh_TW": "選取邊框顏色" },
+      "default": "#E67E3C"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": { "en_US": "Background Color", "zh_TW": "背景顏色" },
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": { "en_US": "Padding Top (px)", "zh_TW": "上方留白 (px)" },
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": { "en_US": "Padding Bottom (px)", "zh_TW": "下方留白 (px)" },
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "default": 24
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": { "en_US": "Category", "zh_TW": "分類" },
+      "settings": [
+        {
+          "type": "image",
+          "id": "image",
+          "label": { "en_US": "Image", "zh_TW": "圖片" }
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": { "en_US": "Label", "zh_TW": "標籤文字" },
+          "default": { "en_US": "Category", "zh_TW": "分類" }
+        },
+        {
+          "type": "text",
+          "id": "link",
+          "label": { "en_US": "Link URL", "zh_TW": "連結網址" }
+        },
+        {
+          "type": "text",
+          "id": "emoji",
+          "label": { "en_US": "Emoji (if no image)", "zh_TW": "Emoji（無圖片時顯示）" },
+          "default": { "en_US": "🏷️", "zh_TW": "🏷️" }
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": { "en_US": "Category Shortcuts", "zh_TW": "分類圖示捷徑" },
+      "blocks": [
+        { "type": "category" },
+        { "type": "category" },
+        { "type": "category" },
+        { "type": "category" },
+        { "type": "category" }
+      ]
+    }
+  ]
+}
+{% endschema %}

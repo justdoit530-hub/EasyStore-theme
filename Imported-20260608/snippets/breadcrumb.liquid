@@ -1,0 +1,57 @@
+<style>
+  .breadcrumb {
+    font-size: 1.2rem;
+    color: rgba(var(--color-foreground), 0.6);
+    padding: 1.2rem 0 0.4rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .breadcrumb a {
+    color: rgba(var(--color-foreground), 0.6);
+    text-decoration: none;
+  }
+  .breadcrumb a:hover {
+    color: rgb(var(--color-foreground));
+    text-decoration: underline;
+  }
+  .breadcrumb__sep {
+    opacity: 0.4;
+    font-size: 1rem;
+  }
+  .breadcrumb span:last-child {
+    color: rgb(var(--color-foreground));
+    font-weight: 500;
+  }
+</style>
+
+{% unless template == 'index' or template == 'cart' %}
+<nav class="breadcrumb page-width" aria-label="breadcrumb">
+  <a href="/">首頁</a>
+
+  {% if template contains 'product' %}
+    {% if collection and collection.handle %}
+      <span class="breadcrumb__sep" aria-hidden="true">›</span>
+      <a href="/collections/{{ collection.handle }}">{{ collection.title | escape }}</a>
+    {% endif %}
+    <span class="breadcrumb__sep" aria-hidden="true">›</span>
+    <span>{{ product.title | escape }}</span>
+
+  {% elsif template contains 'collection' and collection.handle %}
+    <span class="breadcrumb__sep" aria-hidden="true">›</span>
+    {% if current_tags %}
+      <a href="/collections/{{ collection.handle }}">{{ collection.title | escape }}</a>
+      <span class="breadcrumb__sep" aria-hidden="true">›</span>
+      <span>{{ current_tags | join: ' + ' }}</span>
+    {% else %}
+      <span>{{ collection.title | escape }}</span>
+    {% endif %}
+
+  {% elsif template contains 'page' %}
+    <span class="breadcrumb__sep" aria-hidden="true">›</span>
+    <span>{{ page.title | escape }}</span>
+
+  {% endif %}
+</nav>
+{% endunless %}

@@ -1,0 +1,25 @@
+{% app_snippet 'home/content_top' %}
+
+{% if settings.home_section_1 != '' %}
+  <hr class="hr--small hr--clear">
+  {% include settings.home_section_1 %}
+{% endif %}
+
+{% app_snippet 'home/content_middle' %}
+
+{% if settings.home_section_2 != '' %}
+  <hr class="hr--small hr--clear">
+  {% include settings.home_section_2 %}
+{% endif %}
+
+{% if settings.home_section_3 != '' %}
+  <hr class="hr--small hr--clear">
+  {% include settings.home_section_3 %}
+{% endif %}
+
+{% if settings.home_section_4 != '' %}
+  <hr class="hr--small hr--clear">
+  {% include settings.home_section_4 %}
+{% endif %}
+
+{% app_snippet 'home/content_bottom' %}

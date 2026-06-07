@@ -1,0 +1,332 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if IE 9 ]><html class="ie9 no-js"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <!-- theme-version: 2026-06-08 git: -->
+  <!-- Basic page needs ================================================== -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  {% if settings.favicon_img %}
+  <link rel="icon" href="{{ settings.favicon_img }}" />
+  {% endif %}
+
+  <!-- Title and description ================================================== -->
+  <title>
+  {{ page_title | escape }}{% if current_tags %}{% assign meta_tags = current_tags | join: ', ' %} &ndash; {{ 'general.meta.tags' | t: meta_tags }}{% endif %}{% if current_page != 1 and current_page != blank %} &ndash; {{ 'general.meta.page' | t: current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name | escape }}{% endunless %}
+  </title>
+
+  {% if page_description %}
+  <meta name="description" content="{{ page_description | escape }}">
+  {% endif %}
+
+  <!-- Social meta ================================================== -->
+  {% include 'social-meta-tags' %}
+
+  <!-- Helpers ================================================== -->
+  <link rel="canonical" href="{{ canonical_url }}">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport-fit" content="cover">
+  <meta name="theme-color" content="{{ settings.colors_accent_1 }}">
+  
+  {{ '//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js' | script_tag }}
+  
+  <!-- Header hook for plugins ================================================== -->
+  {{ content_for_header }}
+  
+  
+  <script src="{{ 'global.js' | asset_url }}" defer="defer"></script>
+
+  {% comment %}
+    If you store has customer accounts disabled, you can remove the following JS file
+  {% endcomment %}
+  {% if template contains 'customers' %}
+    {{ 'shop_common.js' | global_asset_url | script_tag }}
+    {{ 'customer_area.js' | global_asset_url | script_tag }}
+  {% endif %}
+  {% comment %} Google Tag Manager {% endcomment %}
+  {% if settings.gtm_container_id != blank %}
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','{{ settings.gtm_container_id }}');</script>
+  {% endif %}
+  
+  {% comment %} Google Analytics 4 - 已由 EasyStore GA4 Extension 處理，避免重複追蹤 {% endcomment %}
+  {% comment %}
+  {% if settings.ga4_measurement_id != blank %}
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ settings.ga4_measurement_id }}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '{{ settings.ga4_measurement_id }}');
+  </script>
+  {% endif %}
+  {% endcomment %}
+  
+  {{ 'storefront.js' | global_asset_url | script_tag }}
+
+  <!-- CSS ================================================== -->
+  <style>
+      @font-face {
+        font-family: '{{ settings.type_body_font.font_family }}';
+        font-style: normal;
+        font-weight: {{ settings.type_body_font.variant }};
+        font-display: swap;
+        src: local('{{ settings.type_body_font.font_family }} {{ settings.type_body_font.variant }}'), local('{{ settings.type_body_font.font_family }}-{{ settings.type_body_font.variant }}'), url({{settings.type_body_font.variant_file}}) format('truetype');
+      }
+
+      @font-face {
+        font-family: '{{ settings.type_header_font.font_family }}';
+        font-style: normal;
+        font-weight: {{ settings.type_header_font.variant }};
+        font-display: swap;
+        src: local('{{ settings.type_header_font.font_family }} {{ settings.type_header_font.variant }}'), local('{{ settings.type_header_font.font_family }}-{{ settings.type_header_font.variant }}'), url({{settings.type_header_font.variant_file}}) format('truetype');
+      }
+
+      :root {
+        --font-body-family: '{{ settings.type_body_font.font_family }}', {{ settings.type_body_font.category }};
+        --font-body-style: {{ settings.body_font_style }};
+        --font-body-weight: {{ settings.body_font_weight }};
+
+        --font-heading-family: '{{ settings.type_header_font.font_family }}', {{ settings.type_header_font.category }};
+        --font-heading-style: {{ settings.header_font_style }};
+        --font-heading-weight: {{ settings.header_font_weight }};
+
+        --color-heading-text: {{ settings.colors_text | color_extract: 'red' }},{{ settings.colors_text | color_extract: 'green' }},{{ settings.colors_text | color_extract: 'blue' }};
+        --color-base-text: {{ settings.colors_text | color_extract: 'red' }},{{ settings.colors_text | color_extract: 'green' }},{{ settings.colors_text | color_extract: 'blue' }};
+        --color-base-background-1: {{ settings.colors_background_1 | color_extract: 'red' }},{{ settings.colors_background_1 | color_extract: 'green' }},{{ settings.colors_background_1 | color_extract: 'blue' }};
+        --color-base-background-2: {{ settings.colors_background_1 | color_extract: 'red' }},{{ settings.colors_background_1 | color_extract: 'green' }},{{ settings.colors_background_1 | color_extract: 'blue' }};
+        
+        --color-base-solid-button-labels: {{ settings.colors_solid_button_labels | color_extract: 'red' }},{{ settings.colors_solid_button_labels | color_extract: 'green' }},{{ settings.colors_solid_button_labels | color_extract: 'blue' }};
+        --color-base-outline-button-labels: {{ settings.colors_outline_button_labels | color_extract: 'red' }},{{ settings.colors_outline_button_labels | color_extract: 'green' }},{{ settings.colors_outline_button_labels | color_extract: 'blue' }};
+        
+        --color-base-accent-1: {{ settings.colors_accent_1 | color_extract: 'red' }},{{ settings.colors_accent_1 | color_extract: 'green' }},{{ settings.colors_accent_1 | color_extract: 'blue' }};
+        --color-base-accent-2: {{ settings.colors_accent_1 | color_extract: 'red' }},{{ settings.colors_accent_1 | color_extract: 'green' }},{{ settings.colors_accent_1 | color_extract: 'blue' }};
+        --payment-terms-background-color: {{ settings.colors_background_1 | color_extract: 'red' }},{{ settings.colors_background_1 | color_extract: 'green' }},{{ settings.colors_background_1 | color_extract: 'blue' }};
+
+        --gradient-base-background-1: {{ settings.colors_background_1 | color_extract: 'red' }},{{ settings.colors_background_1 | color_extract: 'green' }},{{ settings.colors_background_1 | color_extract: 'blue' }};
+        --gradient-base-background-2: {{ settings.colors_background_1 | color_extract: 'red' }},{{ settings.colors_background_1 | color_extract: 'green' }},{{ settings.colors_background_1 | color_extract: 'blue' }};
+        --gradient-base-accent-1: {{ settings.colors_accent_1 | color_extract: 'red' }},{{ settings.colors_accent_1 | color_extract: 'green' }},{{ settings.colors_accent_1 | color_extract: 'blue' }};
+        --gradient-base-accent-2: {{ settings.colors_accent_1 | color_extract: 'red' }},{{ settings.colors_accent_1 | color_extract: 'green' }},{{ settings.colors_accent_1 | color_extract: 'blue' }};
+
+        --page-width: {{ settings.page_width | divided_by: 10 }}rem;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: inherit;
+      }
+
+      html {
+        box-sizing: border-box;
+        font-size: 62.5%;
+        height: 100%;
+      }
+
+      body {
+        display: grid;
+        grid-template-rows: auto auto 1fr auto;
+        grid-template-columns: 100%;
+        min-height: 100%;
+        margin: 0;
+        font-size: 1.5rem;
+        letter-spacing: 0.06rem;
+        line-height: 1.8;
+        font-family: var(--font-body-family);
+        font-style: var(--font-body-style);
+        font-weight: var(--font-body-weight);
+        {% if settings.body_bg_image != "" and settings.body_bg_image != null %}
+        background-image: url('{{ settings.body_bg_image }}');
+        background-position: {{ settings.bg_img_position }};
+        {% if settings.bg_img_repeat == false %}
+          background-repeat: no-repeat;
+        {% endif %}
+        {% endif %}
+      }
+
+      @media screen and (min-width: 750px) {
+        body {
+          font-size: 1.6rem;
+        }
+      }
+   </style>
+  
+  {{ 'base.css' | asset_url | stylesheet_tag }}
+
+  
+  {% app_snippet 'global/head' %}
+
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+</head>
+
+<body id="{{ page_title | handle }}" class="{% if customer %}customer-logged-in {% endif %}template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}" >
+	
+  {% comment %} Google Tag Manager (noscript) {% endcomment %}
+  {% if settings.gtm_container_id != blank %}
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ settings.gtm_container_id }}"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  {% endif %}
+  
+  {% app_snippet 'global/body_start' %}
+	
+ 	{% section 'header' %}
+  <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
+    {% app_snippet 'global/content_top' %}
+    {{ content_for_layout }}
+    {% app_snippet 'global/content_bottom' %}
+  </main>
+ 	{% section 'footer' %}
+
+  {% include 'currencies' %}
+
+  {% comment %} Back to Top {% endcomment %}
+  <button id="back-to-top" aria-label="返回頂部" title="返回頂部">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"></polyline></svg>
+  </button>
+  <style>
+    #back-to-top {
+      position: fixed;
+      bottom: 2.4rem;
+      left: 1.6rem;
+      right: auto;
+      z-index: 49;
+      width: 4rem;
+      height: 4rem;
+      border-radius: 50%;
+      background: rgb(var(--color-foreground));
+      color: rgb(var(--color-background));
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px);
+      transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    #back-to-top.is-visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    #back-to-top:hover {
+      opacity: 0.8;
+    }
+    @media screen and (max-width: 749px) {
+      #back-to-top {
+        bottom: 7.2rem;
+      }
+    }
+  </style>
+  <script>
+    (function() {
+      const btn = document.getElementById('back-to-top');
+      if (!btn) return;
+      window.addEventListener('scroll', function() {
+        btn.classList.toggle('is-visible', window.scrollY > 400);
+      }, { passive: true });
+      btn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    })();
+  </script>
+
+  <script>
+
+    window.variantStrings = {
+      addToCart: `{{ 'products.product.add_to_cart' | t }}`,
+      soldOut: `{{ 'products.product.sold_out' | t }}`,
+      unavailable: `{{ 'products.product.unavailable' | t }}`,
+      updateCart: `{{ 'products.product.update_cart' | t }}`,
+    }
+
+    window.accessibilityStrings = {
+      shareSuccess: `{{ 'general.social.copied_success_message' | t }}`,
+    }
+  </script>
+  {% app_snippet 'global/body_end' %}
+  
+  <!-- LINE 浮動按鈕：響應式設計 -->
+  <style>
+  #line-float-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    animation: pulse 2s infinite;
+  }
+
+  #line-float-btn img {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease-in-out;
+    display: block;
+  }
+
+  #line-float-btn img:hover {
+    transform: scale(1.1);
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+  }
+
+  /* 平板尺寸 */
+  @media screen and (min-width: 768px) {
+    #line-float-btn img {
+      width: 64px;
+      height: 64px;
+    }
+  }
+
+  /* 桌面尺寸 */
+  @media screen and (min-width: 1024px) {
+    #line-float-btn {
+      bottom: 24px;
+      right: 24px;
+    }
+    
+    #line-float-btn img {
+      width: 70px;
+      height: 70px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    }
+  }
+
+  /* 大螢幕 */
+  @media screen and (min-width: 1440px) {
+    #line-float-btn {
+      bottom: 30px;
+      right: 30px;
+    }
+    
+    #line-float-btn img {
+      width: 76px;
+      height: 76px;
+    }
+  }
+  </style>
+
+  <div id="line-float-btn">
+    <a href="https://line.me/R/ti/p/@985gjvqh" target="_blank" rel="noopener noreferrer" aria-label="聯繫我們 LINE">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" alt="LINE 客服">
+    </a>
+  </div>
+<!-- 推薦系統核心載入腳本 -->
+<script src="https://recommend.2fishkid.com/static/widget.js?v=4" defer></script>
+<button id="fb-login-btn" style="display:none" aria-hidden="true"></button>
+</body>
+</html>

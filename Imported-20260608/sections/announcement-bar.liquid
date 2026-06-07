@@ -1,0 +1,203 @@
+{% comment %}
+  Announcement Bar - 網站頂部公告欄
+  可在主題編輯器中自訂內容、顏色和顯示設定
+{% endcomment %}
+
+{% if section.settings.show_announcement %}
+<style>
+  .announcement-bar {
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding: 10px 20px;
+    text-align: center;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.6;
+    z-index: 1000;
+    display: none; /* 預設隱藏，由 JS 控制顯示 */
+  }
+
+  .announcement-bar.show {
+    display: block;
+  }
+
+  .announcement-bar__content {
+    max-width: var(--page-width);
+    margin: 0 auto;
+    padding-right: 40px; /* 為關閉按鈕留空間 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .announcement-bar__text {
+    margin: 0;
+    font-weight: 500;
+  }
+
+  .announcement-bar__item {
+    display: inline-block;
+    white-space: nowrap;
+  }
+
+  .announcement-bar__separator {
+    margin: 0 8px;
+    opacity: 0.7;
+  }
+
+  .announcement-bar__close {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: {{ section.settings.text_color }};
+    cursor: pointer;
+    padding: 5px;
+    font-size: 20px;
+    line-height: 1;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+  .announcement-bar__close:hover {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .announcement-bar__close svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
+
+  @media screen and (max-width: 749px) {
+    .announcement-bar {
+      padding: 8px 15px;
+      font-size: 12px;
+    }
+
+    .announcement-bar__content {
+      padding-right: 35px;
+      gap: 6px;
+    }
+
+    .announcement-bar__separator {
+      margin: 0 6px;
+    }
+
+    .announcement-bar__close {
+      right: 10px;
+      width: 25px;
+      height: 25px;
+      font-size: 18px;
+    }
+  }
+</style>
+
+<div class="announcement-bar" id="announcementBar" data-section-id="{{ section.id }}">
+  <div class="announcement-bar__content">
+    <p class="announcement-bar__text">
+      {% if section.settings.announcement_text != blank %}
+        {{ section.settings.announcement_text }}
+      {% else %}
+        <span class="announcement-bar__item">首購折100</span>
+        <span class="announcement-bar__separator">｜</span>
+        <span class="announcement-bar__item">滿1,500 免運</span>
+        <span class="announcement-bar__separator">｜</span>
+        <span class="announcement-bar__item">滿2,900 折140</span>
+        <span class="announcement-bar__separator">｜</span>
+        <span class="announcement-bar__item">5%購物金</span>
+      {% endif %}
+    </p>
+    {% if section.settings.show_close_button %}
+    <button class="announcement-bar__close" aria-label="關閉公告" onclick="closeAnnouncementBar()">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+      </svg>
+    </button>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  (function() {
+    const announcementBar = document.getElementById('announcementBar');
+    const sectionId = announcementBar.dataset.sectionId;
+    const storageKey = 'announcement_bar_closed_' + sectionId;
+    
+    // 檢查是否已經關閉過
+    const isClosed = localStorage.getItem(storageKey);
+    
+    if (!isClosed) {
+      announcementBar.classList.add('show');
+    }
+  })();
+
+  function closeAnnouncementBar() {
+    const announcementBar = document.getElementById('announcementBar');
+    const sectionId = announcementBar.dataset.sectionId;
+    const storageKey = 'announcement_bar_closed_' + sectionId;
+    
+    // 儲存關閉狀態
+    localStorage.setItem(storageKey, 'true');
+    
+    // 添加淡出動畫
+    announcementBar.style.transition = 'opacity 0.3s ease';
+    announcementBar.style.opacity = '0';
+    
+    setTimeout(function() {
+      announcementBar.style.display = 'none';
+    }, 300);
+  }
+</script>
+
+{% endif %}
+
+{% schema %}
+{
+  "name": "公告欄",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_announcement",
+      "label": "顯示公告欄",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "announcement_text",
+      "label": "公告內容",
+      "info": "留空則使用預設內容：首購折100｜滿1,500 免運｜滿2,900 折140｜5%購物金",
+      "default": ""
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "背景顏色",
+      "default": "#E67E3C"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "文字顏色",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_close_button",
+      "label": "顯示關閉按鈕",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

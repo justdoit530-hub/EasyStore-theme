@@ -1,0 +1,615 @@
+<style>
+    .filter-wrapper{
+        width: 100%;
+        max-width: 320px;
+      	--range-slider-width: 230px;
+      	overflow-y: auto;
+      	position: sticky;
+      	position: -webkit-sticky;
+        top: 20px;
+        height: 95dvh;
+        left: 0;
+    }
+    #main-collection-product-grid,
+    #pagination-container,
+    .pagination-wrapper{
+      width: 100%;
+    }
+  	@media screen and (min-width: 750px) {
+      .easystore-section-header-sticky ~ * .filter-wrapper{
+      	height: calc(90dvh - var(--header-bottom-position));
+      	top: calc(20px + var(--header-bottom-position));
+      }
+      .easystore-section-header-hidden ~ * .filter-wrapper{
+        top: 20px;
+        height: 95dvh;
+      }
+      #main-collection-product-grid{
+        height: 100%;
+        width: 75%;
+      	margin-left: 30px;
+      }
+      .float-filter-icon + aside{
+        width: calc(25% - 30px);
+      }
+    }
+    [filter-container-toggle]{
+      cursor: pointer;
+    }
+  
+    .filter-wrapper h4{
+		margin: 1.5em 0 0.5em;
+    }
+    .filter-wrapper label{
+		cursor: pointer;
+    }
+    .float-filter-icon{
+      position: sticky;
+      top: 25px;
+      right: 0;
+      z-index: 3;
+      margin-left: auto;
+    }
+  
+    .easystore-section-header-sticky ~ * .float-filter-icon{
+      top: calc(var(--header-bottom-position) + 20px);
+    }
+  
+    .easystore-section-header-hidden ~ * .float-filter-icon{
+      top: 25px;
+    }
+    #section-main-collection,
+    .collection.page-width{
+      	display: flex;
+      	flex-wrap: wrap;
+    }
+    .flex{
+      display: flex;
+    }
+
+    .range-slider {
+        position: relative;
+        width: var(--range-slider-width);
+        height: 35px;
+        text-align: center;
+    }
+    .range-label{
+		position: absolute;
+      	top: 0px;
+      	left: 0px;
+      	font-size: 10px;
+    }
+    .range-max-label{
+		left: initial;
+		right: 0px;
+    }
+
+    .range-slider input {
+        pointer-events: none;
+        position: absolute;
+        overflow: hidden;
+        left: 0;
+        top: 17px;
+        width: var(--range-slider-width);
+        outline: none;
+        height: 18px;
+        margin: 0;
+        padding: 0;
+    }
+
+    .range-slider input::-webkit-slider-thumb {
+        pointer-events: all;
+        position: relative;
+        z-index: 1;
+        outline: 0;
+    }
+
+    .range-slider input::-moz-range-thumb {
+        pointer-events: all;
+        position: relative;
+        z-index: 1;
+        -moz-appearance: none;
+        width: 9px;
+    }
+
+    .range-slider input::-moz-range-track {
+        position: relative;
+        z-index: -1;
+        background-color: rgba(0, 0, 0, 1);
+        border: 0;
+    }
+
+    .range-slider input:last-of-type::-moz-range-track {
+        -moz-appearance: none;
+        background: none transparent;
+        border: 0;
+    }
+
+    .range-slider input[type=range]::-moz-focus-outer {
+        border: 0;
+    }
+
+    .rangeValue {
+        width: 30px;
+    }
+
+    input[type=range] {
+        -webkit-appearance: none;
+        background: none;
+    }
+
+    input[type=range]::-webkit-slider-runnable-track {
+        height: 5px;
+        border: none;
+        border-radius: 3px;
+        background: transparent;
+    }
+
+    input[type=range]::-ms-track {
+        height: 5px;
+        background: transparent;
+        border: none;
+        border-radius: 3px;
+    }
+
+    input[type=range]::-moz-range-track {
+        height: 5px;
+        background: transparent;
+        border: none;
+        border-radius: 3px;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        border: none;
+        height: 17px;
+        width: 17px;
+        border-radius: 50%;
+        background: #333;
+        border: 1.5px solid #fff;
+        margin-top: -5px;
+        position: relative;
+        z-index: 1;
+    }
+
+    input[type=range]::-ms-thumb {
+        -webkit-appearance: none;
+        border: none;
+        height: 17px;
+        width: 17px;
+        border-radius: 50%;
+        background: #333;
+        border: 1.5px solid #fff;
+        margin-top: -5px;
+        position: relative;
+        z-index: 1;
+    }
+
+    input[type=range]::-moz-range-thumb {
+        -webkit-appearance: none;
+        border: none;
+        height: 17px;
+        width: 17px;
+        border-radius: 50%;
+        background: #333;
+        border: 1.5px solid #fff;
+        margin-top: -5px;
+        position: relative;
+        z-index: 1;
+    }
+
+    input[type=range]:focus {
+        outline: none;
+    }
+
+    .full-range,
+    .incl-range {
+        width: 100%;
+        height: 4px;
+        left: 0;
+        top: 24px;
+        position: absolute;
+        background: #ccc;
+      	border-radius: 10px;
+    }
+
+    .incl-range {
+        background: #666;
+    }
+  
+    .filter-is-loading{
+      position: relative;
+    }
+  
+    .filter-is-loading > *{
+      opacity: 0.5;
+    }
+  
+    .filter-is-loading:before{
+      animation: loading var(--duration-long) infinite linear;
+      border: 0.5rem solid rgba(var(--color-button), 0.4);
+      border-left: 0.5rem solid rgb(var(--color-button));
+      border-radius: 100%;
+      box-sizing: content-box;
+      content: '';
+      display: block;
+      height: 4rem;
+      width: 4rem;
+      position: absolute;
+      top: 30vh;
+      left: 50%;
+      transform: translate(-50%, 0);
+      -webkit-transform: translate(-50%, 0);
+      z-index: 2;
+    }
+
+    @keyframes loading {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+  
+    @media screen and (max-width: 749px) {
+      .filter-wrapper{
+        position: fixed;
+        top: 0;
+        left: initial;
+        right: 0;
+        bottom: 0;
+        height: 100%;
+        transform: translate(100%, 0);
+        -webkit-transform: translate(100%, 0);
+        z-index: 100005;
+        background-color: rgb(var(--color-background));
+        padding: 3rem 3rem 8rem;
+        transition: all 300ms ease-in-out;
+        -webkit-transition: all 300ms ease-in-out;
+      	--range-slider-width: 240px;
+        overflow-y: auto;
+      }
+      .filter-wrapper.is-active{
+        transform: translate(0, 0);
+        -webkit-transform: translate(0, 0);
+      }
+      .filter-wrapper.is-active + .filter-wrapper-backdrop{
+      	position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 100000;
+        background-color: rgba(var(--color-base-text),0.5);
+        display: block;
+      }
+      .collection.flex,
+      .collection.page-width,
+      #section-main-collection{
+        flex-wrap: wrap;
+        align-items: flex-start;
+      }
+      .float-filter-icon [filter-container-toggle]{
+        padding: 3px;
+        margin-bottom: 15px;
+        background-color: rgb(var(--color-background));
+        border-radius: 6px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid rgba(var(--color-base-text),0.2);
+      }
+    }
+</style>
+
+
+<div class="filter-wrapper">
+  <div class="text-right">
+    <span filter-container-toggle class="medium-hide large-up-hide">
+      {% include 'svg-definitions' with 'icon-close', class: 'svg-icon' %}
+    </span>
+  </div>
+  
+  
+  <h4 class="flex flex-space-between"><span>{{ 'collections.sorting.title' | t }}</span> <a href="#MainContent" onclick="resetFilter()">{{ 'collections.sorting.reset' | t }}</a></h4>
+  
+    <input id="sorting-featured" type="radio" class="styled-checkbox" value="featured" name="SortBy" />
+    <label for="sorting-featured" style="display:inline">{{ 'collections.sorting.featured' | t }}</label>
+    <br>
+  	<input id="sorting-title+asc" type="radio" class="styled-checkbox" value="title+asc" name="SortBy" />
+    <label for="sorting-title+asc" style="display:inline">{{ 'collections.sorting.az' | t }}</label>
+    <br>
+  	<input id="sorting-title+desc" type="radio" class="styled-checkbox" value="title+desc" name="SortBy" />
+    <label for="sorting-title+desc" style="display:inline">{{ 'collections.sorting.za' | t }}</label>
+    <br>
+  	<input id="sorting-price+asc" type="radio" class="styled-checkbox" value="price+asc" name="SortBy" />
+    <label for="sorting-price+asc" style="display:inline">{{ 'collections.sorting.price_ascending' | t }}</label>
+    <br>
+  	<input id="sorting-price+desc" type="radio" class="styled-checkbox" value="price+desc" name="SortBy" />
+    <label for="sorting-price+desc" style="display:inline">{{ 'collections.sorting.price_descending' | t }}</label>
+    <br>
+  	<input id="sorting-date+desc" type="radio" class="styled-checkbox" value="date+desc" name="SortBy" />
+    <label for="sorting-date+desc" style="display:inline">{{ 'collections.sorting.date_descending' | t }}</label>
+    <br>
+  	<input id="sorting-date+asc" type="radio" class="styled-checkbox" value="date+asc" name="SortBy" />
+    <label for="sorting-date+asc" style="display:inline">{{ 'collections.sorting.date_ascending' | t }}</label>
+    <br>
+  
+  {% for filter in collection.filters %}
+	{% case filter.type %}
+	{% when 'price_range' %}
+		<h4>{{ filter.label }}</h4>
+        <div>
+          <section class="range-slider">
+               <span class="range-label range-min-label">
+                 {{shop.money_prefix}} <span id="minPrice" class="output outputOne"></span> {{shop.money_suffix}}
+               </span>
+               <span class="range-label range-max-label">
+                 {{shop.money_prefix}} <span id="maxPrice" class="output outputTwo"></span> {{shop.money_suffix}}
+               </span>
+              <span class="full-range"></span>
+              <span class="incl-range"></span>
+              <input name="rangeOne" value="{{ filter.min_value.value }}" min="0" max="{{ filter.range_max }}" step="1" type="range">
+              <input name="rangeTwo" value="{{ filter.max_value.value }}" min="0" max="{{ filter.range_max }}" step="1" type="range">
+          </section>
+        </div>
+    {% when 'list' %}
+		<h4>{{ filter.label }}</h4>
+        {% for option in filter.values %}
+          <input id="{{ option.value }}" type="checkbox" {% if option.active %}checked{% endif %} class="styled-checkbox" data-type="{{filter.param_name}}" data-label="{{filter.label}}" value="{{ option.value }}" />
+          <label for="{{ option.value }}" style="display:inline">{{ option.label }}</label>
+          <br>
+        {% endfor %}
+    {% when 'boolean' %}
+        <div>
+          <label for="{{ filter.label }}">
+            <h4 class="flex" style="justify-content: space-between;align-items: center;max-width: 215px;">
+              {{ filter.label }}
+              <input id="{{ filter.label }}" {% if option.active %}checked{% endif %}  type="checkbox" class="styled-checkbox" data-type="purchasable" data-value="true" />
+            </h4>
+          </label>
+          
+        </div>
+	{% endcase %}
+  {% endfor %}
+</div>
+<div filter-container-toggle class="filter-wrapper-backdrop"></div>
+
+
+
+<script>
+    var rangeOne = document.querySelector('input[name="rangeOne"]') || {};
+    var rangeTwo = document.querySelector('input[name="rangeTwo"]') || {};
+    var outputOne = document.querySelector('.outputOne');
+    var outputTwo = document.querySelector('.outputTwo');
+    var inclRange = document.querySelector('.incl-range');
+    var minPrice = document.getElementById('minPrice');
+    var maxPrice = document.getElementById('maxPrice');
+    var brandCheckboxes = document.querySelectorAll('.styled-checkbox[data-type="brands"]');
+    var tagCheckboxes = document.querySelectorAll('.styled-checkbox[data-type="tags"]');
+    var variantCheckboxes = document.querySelectorAll('.styled-checkbox[data-type*="variant_type"]');
+    var selectedVariantType = document.getElementById('selectedVariantType');
+    var purchasableCheckboxes = document.querySelectorAll('.styled-checkbox[data-type="purchasable"]');
+    var sortByRadio = document.querySelectorAll('.filter-wrapper [name="SortBy"]');
+    var filterToggle = document.querySelectorAll('[filter-container-toggle]');
+  
+	document.querySelector('.filter-wrapper [name="SortBy"][value="{{ collection.sort_by | default: collection.default_sort_by }}"]').setAttribute('checked',true)
+
+  
+    function getSelectedPurchasableValues(checkboxes) {
+        return Array.from(checkboxes)
+            .filter(function (checkbox) {
+                return checkbox.checked;
+            })
+            .map(function (checkbox) {
+                return checkbox.getAttribute('data-value');
+            });
+    }
+  
+    filterToggle.forEach(function (button) {
+        button.addEventListener('click', function () {
+            if(document.querySelector('.filter-wrapper.is-active')) {
+            	document.querySelector('.filter-wrapper').classList.remove('is-active')
+            } else {
+            	document.querySelector('.filter-wrapper').classList.add('is-active')
+            }
+				
+        });
+    });
+
+    sortByRadio.forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            refreshSection();
+        });
+    });
+
+    variantCheckboxes.forEach(function (checkbox) {
+        checkbox.addEventListener('change', function () {
+            updateSelectedVariants();
+            refreshSection();
+        });
+    });
+
+    function updateSelectedVariants() {
+        var selectedVariants = getSelectedVariantValues(variantCheckboxes);
+    }
+
+    function getSelectedVariantValues(checkboxes) {
+        var formattedVariants = {};
+
+        checkboxes.forEach(function (checkbox) {
+            if (checkbox.checked) {
+                var type = checkbox.getAttribute('data-type');
+                var value = checkbox.value;
+
+                if (!formattedVariants[type]) {
+                  formattedVariants[type] = value;
+                }else{
+                  formattedVariants[type] += `,${value}`;
+                }
+            }
+        });
+      
+        return formattedVariants || null;
+    }
+
+
+    function isDOMElement(obj) {
+        return obj instanceof Element || obj instanceof HTMLDocument;
+    }
+
+    function updateView(el) {
+      if(!isDOMElement(el)) return;
+        if (el.getAttribute('name') === 'rangeOne') {
+            outputOne.innerHTML = el.value;
+            minPrice.textContent = el.value;
+        } else {
+            outputTwo.innerHTML = el.value
+            maxPrice.textContent = el.value;
+        }
+        if (parseInt(rangeOne.value) > parseInt(rangeTwo.value)) {
+            inclRange.style.width = (rangeOne.value - rangeTwo.value) / el.getAttribute('max') * 100 + '%';
+            inclRange.style.left = rangeTwo.value / el.getAttribute('max') * 100 + '%';
+        } else {
+            inclRange.style.width = (rangeTwo.value - rangeOne.value) / el.getAttribute('max') * 100 + '%';
+            inclRange.style.left = rangeOne.value / el.getAttribute('max') * 100 + '%';
+        }
+    };
+  
+
+    function _filter_debounce(fn, wait) {
+      let t;
+      return (...args) => {
+        clearTimeout(t);
+        t = setTimeout(() => fn.apply(this, args), wait);
+      };
+    }
+  const debouncedRefreshSection = _filter_debounce(refreshSection, 400);
+
+    document.addEventListener('DOMContentLoaded', function () {
+      	document.querySelector('.template-collection').style.setProperty('--header-bottom-position', `${document.querySelector('#easystore-section-header').offsetHeight}px`);
+      
+        updateView(rangeOne);
+        updateView(rangeTwo);
+      	document.querySelectorAll('.range-slider input[type="range"]').forEach((input)=>{
+          input.addEventListener('input', function () {
+            if(input.name == "rangeOne" && Number(input.value) > Number(rangeTwo.value)) input.value = rangeTwo.value;
+            if(input.name == "rangeTwo" && Number(input.value) < Number(rangeOne.value)) input.value = rangeOne.value;
+            updateView(input);
+            debouncedRefreshSection()
+          });
+        });
+
+
+        brandCheckboxes.forEach(function (checkbox) {
+            checkbox.addEventListener('change', function () {
+                refreshSection();
+            });
+        });
+
+        tagCheckboxes.forEach(function (checkbox) {
+            checkbox.addEventListener('change', function () {
+                refreshSection();
+            });
+        });
+
+        purchasableCheckboxes.forEach(function (checkbox) {
+            checkbox.addEventListener('change', function () {
+                refreshSection();
+            });
+        });
+    });
+
+    function refreshSection() {
+        var selectedBrands = getSelectedTagValues(brandCheckboxes);
+        var selectedTags = getSelectedTagValues(tagCheckboxes);
+        var formattedVariants = getSelectedVariantValues(variantCheckboxes);
+        var selectedPurchasable = getSelectedValues(purchasableCheckboxes);
+        var sortBy = document.querySelector('.filter-wrapper [name="SortBy"]:checked').value;
+        var currentUrl = window.location.origin + window.location.pathname;
+        var apiUrl = currentUrl + '/filtered_section_html';
+      
+      	document.querySelector('#main-collection-product-grid').classList.add('filter-is-loading');
+      
+        // Construct query parameters
+        var queryParams = new URLSearchParams({
+            min_price: rangeOne.value || '',
+            max_price: rangeTwo.value || '',
+            sort: sortBy || '',
+            brands: selectedBrands || '',
+            tags: selectedTags || '',
+            purchasable: selectedPurchasable || ''
+        });
+      
+        Object.entries(formattedVariants).forEach(formattedVariant => {
+          const [key, value] = formattedVariant
+          queryParams.append(`${key}`, value)
+        });
+
+        // Append query parameters to the apiUrl
+        var apiUrlWithParams = `${apiUrl}?${queryParams}`;
+
+        var queryString = queryParams.toString();
+        // Set window.location.search to the new query string
+        window.history.replaceState({}, '', window.location.pathname + '?' + queryString);
+      
+      	fetch(apiUrlWithParams, {
+          method: 'GET',
+          headers: {
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest",
+          },
+      	})
+      	.then((response) => {
+      		return response.json();
+      	})
+      	.then((response) => {
+          document.querySelector('#main-collection-product-grid').classList.remove('filter-is-loading');
+      		document.querySelector('#main-collection-product-grid').innerHTML = response.filtered_product_list;
+      		document.querySelector('#pagination-container').innerHTML = response.pagination;
+          window.scrollTo({top: document.querySelector('.collection-hero__title').offsetTop, behavior: "smooth"});
+      	})
+      	.catch((error) => {
+          document.querySelector('#main-collection-product-grid').classList.remove('filter-is-loading');
+      		console.error('Error refreshing section:', error);
+          window.scrollTo({top: document.querySelector('.collection-hero__title').offsetTop, behavior: "smooth"});
+      	})
+    }
+
+    function getSelectedValues(checkboxes) {
+        return Array.from(checkboxes)
+            .filter(function (checkbox) {
+                return checkbox.checked;
+            })
+            .map(function (checkbox) {
+                return checkbox.getAttribute('data-value');
+            })
+      		.join(",");
+    }
+
+    function getSelectedTagValues(checkboxes) {
+        return Array.from(checkboxes)
+            .filter(function (checkbox) {
+                return checkbox.checked;
+            })
+            .map(function (checkbox) {
+                return checkbox.value;
+            })
+      		.join(",");
+    }
+
+    function resetFilter() {
+      document.querySelector('[name=SortBy][value=featured]').checked = true;
+      document.querySelectorAll('.filter-wrapper [type=checkbox]').forEach(function(checkbox) {
+          checkbox.checked = false;
+      });
+      if(rangeOne) rangeOne.value = 0;
+      if(rangeTwo) rangeTwo.value = rangeTwo.getAttribute('max');
+      updateView(rangeOne);
+      updateView(rangeTwo);
+      refreshSection();
+    }
+
+</script>

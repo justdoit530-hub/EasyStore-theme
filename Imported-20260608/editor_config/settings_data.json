@@ -1,0 +1,499 @@
+{
+  "current": "editor",
+  "presets": {
+    "editor": {
+      "colors_solid_button_labels": "#FFFFFF",
+      "colors_accent_1": "#000000",
+      "colors_text": "#000000",
+      "colors_outline_button_labels": "#051444",
+      "colors_background_1": "#FFFFFF",
+      "gradient_background_1": "#FFFFFF",
+      "page_width": 1550,
+      "body_bg_image": "",
+      "bg_img_position": "top center",
+      "bg_img_repeat": 0,
+      "type_header_font": {
+        "category": "serif",
+        "font_family": "Alice",
+        "font_id": 26,
+        "name": "Alice",
+        "title": "Alice",
+        "variant": "regular",
+        "variant_file": "https://fonts.gstatic.com/s/alice/v18/OpNCnoEEmtHa6FcJpA_chzJ0.ttf"
+      },
+      "type_body_font": {
+        "category": "serif",
+        "font_family": "Alice",
+        "font_id": 26,
+        "name": "Alice",
+        "title": "Alice",
+        "variant": "regular",
+        "variant_file": "https://fonts.gstatic.com/s/alice/v18/OpNCnoEEmtHa6FcJpA_chzJ0.ttf"
+      },
+      "body_font_style": "normal",
+      "body_font_weight": 400,
+      "header_font_style": "normal",
+      "header_font_weight": 500,
+      "product_description_position": "bottom",
+      "logo_img": "https://cdn.store-assets.com/s/1264952/f/13291621.png",
+      "logo_width": 100,
+      "favicon_img": "https://cdn.store-assets.com/s/1264952/f/13291622.jpg",
+      "meta_img": "https://cdn.store-assets.com/s/1264952/f/13291621.png",
+      "use_original_image": "0",
+      "gtm_container_id": "GTM-WBFKWSP",
+      "ga4_measurement_id": "G-SS5XXEYL7H",
+      "collection_show_variant_img": "0",
+      "promo_bar_enabled": true,
+      "promo_free_shipping_enabled": true,
+      "promo_free_shipping_goal": "1500",
+      "promo_free_shipping_msg": "再消費 {amount} 即可免運",
+      "promo_free_shipping_achieved_msg": "此筆訂單已免運喔!",
+      "promo_discount_enabled": true,
+      "promo_discount_goal": "2900",
+      "promo_discount_amount": "140",
+      "promo_discount_msg": "再消費 {amount} 即可折 ${discount}",
+      "promo_discount_achieved_msg": "已達滿額折扣門檻!",
+      "promo_points_enabled": "0",
+      "promo_points_msg": "本筆訂單可獲得 3% 購物金回饋",
+      "product_img_res": "grande",
+      "show_add_to_cart_button": 1,
+      "sections": {
+        "header": {
+          "type": "header",
+          "settings": {
+            "logo": "https://cdn.store-assets.com/s/1264952/f/13331454.png",
+            "align_logo": "top-center",
+            "logo_max_width": 160,
+            "main_linklist": "main-menu",
+            "message": 0,
+            "home_page_only": true,
+            "message_text": "Announce something here",
+            "message_link": "",
+            "color_bg": "#FFFFFF",
+            "color_text": "#000000",
+            "enable_sticky_header": true,
+            "header_bg_color": "rgba(255, 255, 255, 1)",
+            "transparent_header": 0,
+            "secondary_color_text": "#FFFFFF",
+            "logo_secondary": "https://cdn.store-assets.com/s/1264952/f/13291623.jpg",
+            "announcement_text": "首購折50｜滿1,500 免運 ｜滿2,900 折140｜3%購物金",
+            "show_announcement": true,
+            "show_close_button": true,
+            "announcement_bg_color": "rgba(231, 136, 74, 1)",
+            "announcement_text_color": "#FFFFFF"
+          }
+        },
+        "main-cart-featured-collection": {
+          "type": "main-cart-featured-collection",
+          "settings": {
+            "title": "",
+            "collection__id": "feature-on-homepage",
+            "products_per_row": 4,
+            "products_to_show": 4,
+            "show_view_all": true,
+            "swipe_on_mobile": true,
+            "show_secondary_image": true,
+            "product_bg_color": "rgba(245, 245, 245, 1)",
+            "show_product_info": true
+          }
+        },
+        "main-collection": {
+          "type": "main-collection",
+          "settings": {
+            "products_per_row": 4,
+            "show_secondary_image": 0,
+            "show_add_to_cart_button": 0,
+            "image_ratio": "portrait",
+            "product_bg_color": "rgba(245, 245, 245, 1)",
+            "show_product_info": true
+          }
+        },
+        "main-product": {
+          "type": "main-product",
+          "settings": {
+            "variant_options_display": "radio-img",
+            "product_description_position": "bottom",
+            "wrapper_bg_color": "rgba(245, 245, 245, 1)",
+            "show_selected_variant_image": true
+          },
+          "blocks": {
+            "main-product-ectarb8syfg-0kvxts5": {
+              "type": "text",
+              "settings": {
+                "image": "https://cdn.store-assets.com/s/1264952/f/17010242.webp",
+                "text": "國際運送"
+              }
+            },
+            "main-product-ecmzoejthzb-n9qf16l": {
+              "type": "text",
+              "settings": {
+                "image": "https://cdn.store-assets.com/s/1264952/f/17010260.webp",
+                "text": "安全支付"
+              }
+            },
+            "main-product-wj7zbwsjhh-fqjcwon": {
+              "type": "text",
+              "settings": {
+                "image": "https://cdn.store-assets.com/s/1264952/f/17010261.webp",
+                "text": "預購商品7-14工作天"
+              }
+            }
+          },
+          "blocks_order": [
+            "main-product-ectarb8syfg-0kvxts5",
+            "main-product-ecmzoejthzb-n9qf16l",
+            "main-product-wj7zbwsjhh-fqjcwon"
+          ]
+        },
+        "footer": {
+          "type": "footer",
+          "blocks": {
+            "footer-2": {
+              "type": "follow_us",
+              "settings": {
+                "title": "聯繫我們",
+                "twitter": "",
+                "facebook": "https://facebook.com/2fishkids",
+                "instagram": "https://instagram.com/2fishkids",
+                "tiktok": "",
+                "whatsapp": "",
+                "line": "https://lin.ee/OHRQO3M",
+                "wechat": "",
+                "youtube": ""
+              }
+            },
+            "footer-i65o3mvyffm-5a6npu3": {
+              "type": "about_us",
+              "settings": {
+                "title": "營業資料",
+                "text": "貳魚商行｜統編 94715916"
+              }
+            },
+            "footer-8op769l5gvn-hvzy3x9": {
+              "type": "payment_accept",
+              "settings": {
+                "title": "支付方式",
+                "show_visa_icon": 0,
+                "show_master_icon": 0,
+                "show_amex_icon": 0,
+                "show_paypal_icon": 0,
+                "show_diners_icon": 0,
+                "show_discover_icon": 0,
+                "show_payment_method": false
+              }
+            }
+          },
+          "blocks_order": [
+            "footer-2",
+            "footer-8op769l5gvn-hvzy3x9",
+            "footer-i65o3mvyffm-5a6npu3"
+          ],
+          "settings": {
+            "color_footer_background": "#FFFFFF",
+            "color_footer_heading_text": "#000000",
+            "color_footer_body_text": "#000000"
+          }
+        },
+        "1684403242688": {
+          "settings": {
+            "title": "Recommended",
+            "collection__id": 3844020,
+            "products_per_row": 4,
+            "products_to_show": 8,
+            "show_view_all": 0,
+            "image_ratio": "portrait",
+            "show_secondary_image": 0,
+            "show_add_to_cart_button": 0,
+            "swipe_on_mobile": true,
+            "center_title": true,
+            "show_product_info": true,
+            "product_bg_color": "rgba(245, 245, 245, 1)"
+          },
+          "type": "featured-collection"
+        },
+        "1748402477286": {
+          "settings": {
+            "title": "",
+            "grid": 4,
+            "products_to_show": 8,
+            "image_ratio": "square",
+            "show_secondary_image": false,
+            "show_add_to_cart_button": 0,
+            "show_product_info": 0,
+            "swipe_on_mobile": true,
+            "product_bg_color": "rgba(245, 245, 245, 1)"
+          },
+          "type": "collection-list",
+          "blocks_order": [
+            "1748402477286-0",
+            "1748402477286-b2nlgw0r9na-8pdsmrn",
+            "1748402477286-riiww2zizao-qi13ec7"
+          ],
+          "blocks": {
+            "1748402477286-0": {
+              "type": "featured_collection",
+              "settings": {
+                "collection__id": 3967855
+              }
+            },
+            "1748402477286-b2nlgw0r9na-8pdsmrn": {
+              "type": "featured_collection",
+              "settings": {
+                "collection__id": 3967856
+              }
+            },
+            "1748402477286-riiww2zizao-qi13ec7": {
+              "type": "featured_collection",
+              "settings": {
+                "collection__id": 4296959
+              }
+            }
+          }
+        },
+        "1748404040041": {
+          "settings": {
+            "title": "",
+            "grid": 4,
+            "products_to_show": 8,
+            "image_ratio": "square",
+            "show_secondary_image": false,
+            "show_add_to_cart_button": 0,
+            "show_product_info": 0,
+            "swipe_on_mobile": true,
+            "product_bg_color": "rgba(245, 245, 245, 1)"
+          },
+          "type": "collection-list",
+          "blocks_order": [
+            "1748404040041-0",
+            "1748404040041-1",
+            "1748404040041-b9ax398f9pw-radc58"
+          ],
+          "blocks": {
+            "1748404040041-0": {
+              "type": "featured_collection",
+              "settings": {
+                "collection__id": 4475815
+              }
+            },
+            "1748404040041-1": {
+              "type": "featured_collection",
+              "settings": {
+                "collection__id": 4084137
+              }
+            },
+            "1748404040041-b9ax398f9pw-radc58": {
+              "type": "featured_collection",
+              "settings": {
+                "collection__id": 4341948
+              }
+            }
+          }
+        },
+        "1748404853435": {
+          "settings": {
+            "title": "",
+            "grid": 4,
+            "products_to_show": 12,
+            "image_ratio": "square",
+            "show_secondary_image": false,
+            "show_add_to_cart_button": 0,
+            "show_product_info": 0,
+            "swipe_on_mobile": true,
+            "product_bg_color": "rgba(245, 245, 245, 1)"
+          },
+          "type": "collection-list",
+          "blocks_order": [
+            "1748404853435-0",
+            "1748404853435-1",
+            "1748404853435-b25ustka8y-d3inevt"
+          ],
+          "blocks": {
+            "1748404853435-0": {
+              "type": "featured_collection",
+              "settings": {
+                "collection__id": 4296961
+              }
+            },
+            "1748404853435-1": {
+              "type": "featured_collection",
+              "settings": {
+                "collection__id": 3967863
+              }
+            },
+            "1748404853435-b25ustka8y-d3inevt": {
+              "type": "featured_collection",
+              "settings": {
+                "collection__id": 4530973
+              }
+            }
+          }
+        },
+        "1748404905073": {
+          "settings": {
+            "title": "",
+            "grid": 4,
+            "products_to_show": 8,
+            "image_ratio": "square",
+            "show_secondary_image": false,
+            "show_add_to_cart_button": 0,
+            "show_product_info": 0,
+            "swipe_on_mobile": true,
+            "product_bg_color": "rgba(245, 245, 245, 1)"
+          },
+          "type": "collection-list",
+          "blocks_order": [
+            "1748404905073-0",
+            "1748404905073-1",
+            "1748404905073-1064fzhx8u5r-2l3ie9"
+          ],
+          "blocks": {
+            "1748404905073-0": {
+              "type": "featured_collection",
+              "settings": {
+                "collection__id": 3967857
+              }
+            },
+            "1748404905073-1": {
+              "type": "featured_collection",
+              "settings": {
+                "collection__id": 4109698
+              }
+            },
+            "1748404905073-1064fzhx8u5r-2l3ie9": {
+              "type": "featured_collection",
+              "settings": {
+                "collection__id": 3967859
+              }
+            }
+          }
+        },
+        "1749659175931": {
+          "settings": {
+            "title": "",
+            "image_width": "full",
+            "image_ratio": "portrait",
+            "column_alignment": "center",
+            "background_style": "primary",
+            "button_label": "🏕️ Coleman x Matsui 🏕️ ",
+            "button_link": "/search?q=markey",
+            "swipe_on_mobile": true,
+            "center_title": true
+          },
+          "type": "multicolumn",
+          "blocks_order": [
+            "1749659175931-0",
+            "1749659175931-1",
+            "1749659175931-2"
+          ],
+          "blocks": {
+            "1749659175931-0": {
+              "type": "column",
+              "settings": {
+                "image": "https://cdn.store-assets.com/s/1264952/f/15435430.jpeg",
+                "title": "",
+                "text": "",
+                "link_text": "",
+                "link_url": ""
+              }
+            },
+            "1749659175931-1": {
+              "type": "column",
+              "settings": {
+                "image": "https://cdn.store-assets.com/s/1264952/f/15435431.jpeg",
+                "title": "",
+                "text": "",
+                "link_text": "",
+                "link_url": ""
+              }
+            },
+            "1749659175931-2": {
+              "type": "column",
+              "settings": {
+                "image": "https://cdn.store-assets.com/s/1264952/f/15435432.jpeg",
+                "title": "",
+                "text": "",
+                "link_text": "",
+                "link_url": ""
+              }
+            }
+          }
+        },
+        "1751067989097": {
+          "settings": {
+            "title": "",
+            "image_width": "full",
+            "image_ratio": "square",
+            "column_alignment": "center",
+            "background_style": "primary",
+            "button_label": "",
+            "button_link": "",
+            "swipe_on_mobile": true,
+            "center_title": true
+          },
+          "type": "multicolumn",
+          "blocks_order": [
+            "1751067989097-0",
+            "1751067989097-1",
+            "1751067989097-2",
+            "1751067989097-vjuwbuzqesl-6p9q4mp"
+          ],
+          "blocks": {
+            "1751067989097-0": {
+              "type": "column",
+              "settings": {
+                "image": "https://cdn.store-assets.com/s/1264952/f/16771932.png",
+                "title": "夏日戲水",
+                "text": "",
+                "link_text": "",
+                "link_url": "/collections/summer"
+              }
+            },
+            "1751067989097-1": {
+              "type": "column",
+              "settings": {
+                "image": "https://cdn.store-assets.com/s/1264952/f/16771933.jpg",
+                "title": "春夏上身",
+                "text": "",
+                "link_text": "",
+                "link_url": "/collections/upper"
+              }
+            },
+            "1751067989097-2": {
+              "type": "column",
+              "settings": {
+                "image": "https://cdn.store-assets.com/s/1264952/f/16771934.jpg",
+                "title": "春夏下身",
+                "text": "",
+                "link_text": "",
+                "link_url": "/collections/under"
+              }
+            },
+            "1751067989097-vjuwbuzqesl-6p9q4mp": {
+              "type": "column",
+              "settings": {
+                "image": "https://cdn.store-assets.com/s/1264952/f/16771935.jpg",
+                "title": "居家睡衣",
+                "text": "",
+                "link_text": "",
+                "link_url": "/search?q=居家"
+              }
+            }
+          }
+        }
+      },
+      "content_for_index": [
+        "1751067989097",
+        "1684403242688",
+        "1748402477286",
+        "1748404905073",
+        "1748404040041",
+        "1749659175931",
+        "1748404853435"
+      ],
+      "placeholder": {
+        "featured_single_product": "https://s3-ap-southeast-1.amazonaws.com/eesb.themes/onboarding/candy/en_placeholder_featured-single-product.jpg",
+        "featured_blog": "https://s3-ap-southeast-1.amazonaws.com/eesb.themes/onboarding/candy/en_placeholder_featured-blog.jpg"
+      }
+    }
+  }
+}

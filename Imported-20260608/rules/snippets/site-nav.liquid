@@ -1,0 +1,74 @@
+{% comment %}
+  List out your main-menu linklist (default)
+
+  More info on contents:
+    - http://docs.shopify.com/themes/liquid-variables/contents
+{% endcomment %}
+<ul class="site-nav{% unless settings.nav_below_logo %} large--text-center{% endunless %}" id="AccessibleNav">
+  {% for link in contents.main-menu.links %}
+    {% assign parent_handle = link.handle %}
+    {% if contents[parent_handle].links != '' %}
+      {% assign parent = contents[parent_handle].links %}
+      <li class="site-nav--has-dropdown{% if link.active %} site-nav--active{% endif %}" aria-haspopup="true">
+        <a href="{{ link.url }}" {% if link.new_page == "true" %} target="_blank" {% endif %} class="site-nav__link">
+          {{ link.title | escape }}
+          <span class="icon-fallback-text">
+            <span class="icon icon-arrow-down" aria-hidden="true"></span>
+          </span>
+        </a>
+        <ul class="site-nav__dropdown">
+          {% for parentlink in parent %}
+            {% assign child_handle = parentlink.handle %}
+            {% if contents[child_handle].links != '' %}
+              {% assign child = contents[child_handle].links %}
+              <li class="site-nav--has-dropdown">
+                <a href="{{ parentlink.url }}" {% if parentlink.new_page == "true" %} target="_blank" {% endif %} class="site-nav__link">
+                  {{ parentlink.title | escape }}
+                  <span class="icon-fallback-text">
+                    <span class="icon icon-arrow-right" aria-hidden="true"></span>
+                  </span>
+                </a>
+                <ul class="site-nav__dropdown">
+                  {% for childlink in child %}
+                    {% assign grand_handle = childlink.handle %}
+                    {% if contents[grand_handle].links != '' %}
+                      {% assign grand = contents[grand_handle].links %}
+                      <li class="site-nav--has-dropdown">
+                        <a href="{{ childlink.url }}" {% if childlink.new_page == "true" %} target="_blank" {% endif %} class="site-nav__link">
+                          {{ childlink.title | escape }}
+                          <span class="icon-fallback-text">
+                            <span class="icon icon-arrow-right" aria-hidden="true"></span>
+                          </span>
+                        </a>
+                        <ul class="site-nav__dropdown">
+                          {% for grandlink in grand %}
+                            <li{% if grandlink.active %} class="site-nav--active"{% endif %}>
+                              <a href="{{ grandlink.url }}" {% if grandlink.new_page == "true" %} target="_blank" {% endif %} class="site-nav__link">{{ grandlink.title | escape }}</a>
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      </li>
+                    {% else %}
+                      <li {% if childlink.active %}class="site-nav--active"{% endif %}>
+                        <a href="{{ childlink.url }}" {% if childlink.new_page == "true" %} target="_blank" {% endif %} class="site-nav__link">{{ childlink.title }}</a>
+                      </li>
+                    {% endif %}
+                  {% endfor %}
+                </ul>
+              </li>
+            {% else %}
+              <li {% if parentlink.active %}class="site-nav--active"{% endif %}>
+                <a href="{{ parentlink.url }}" {% if parentlink.new_page == "true" %} target="_blank" {% endif %} class="site-nav__link">{{ parentlink.title }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </li>
+    {% else %}
+      <li {% if link.active %}class="site-nav--active"{% endif %}>
+        <a href="{{ link.url }}" {% if link.new_page == "true" %} target="_blank" {% endif %} class="site-nav__link">{{ link.title }}</a>
+      </li>
+    {% endif %}
+  {% endfor %}
+  {% app_snippet 'global/main_menu' %}
+</ul>

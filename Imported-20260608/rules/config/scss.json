@@ -1,0 +1,40 @@
+{
+  "current": "editor",
+  "presets": {
+    "editor": {
+      "body_font_family": [
+        "Geneva,Tahoma,Verdana,sans-serif"
+      ],
+      "body_font_size": "18px",
+      "body_text_color": "#333333",
+      "heading_font_family": [
+        "'Gill Sans','Gill Sans MT',Calibri,sans-serif"
+      ],
+      "heading_font_weight": "lighter",
+      "heading_font_size": "30px",
+      "heading_text_color": "#333333",
+      "body_bg_image": "\"\"",
+      "body_bg_color": "#ffffff",
+      "bg_img_position": "top left",
+      "body_bg_repeat": "no-repeat",
+      "body_bg_attachment": "fixed",
+      "wrapper_bg_color": "rgb(255, 255, 255)",
+      "header_logo_font_family": [
+        "Geneva,Tahoma,Verdana,sans-serif"
+      ],
+      "header_logo_font_weight": "lighter",
+      "header_logo_font_size": "30px",
+      "header_logo_color": "#817e7a",
+      "link_text_color": "#193441",
+      "logo_width": "250",
+      "topbar_text_color": "#ffffff",
+      "topbar_bg_color": "rgb(77, 157, 194)",
+      "btn_text_color": "#ffffff",
+      "btn_bg_color": "#193441",
+      "navi_border_color": "#ffffff",
+      "social_link_color": "#ffffff",
+      "footer_text_color": "#ffffff",
+      "footer_bg_color": "rgb(77, 157, 194)"
+    }
+  }
+}

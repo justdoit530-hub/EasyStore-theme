@@ -1,0 +1,854 @@
+# Conversation 6d4a4caf-104f-4d83-b09a-ad3f10207377
+
+- Source: `claude`
+- User: `neowu`
+- System: `neowus-MacBook-Air.local`
+- Started: `2026-04-12T06:47:59.961Z`
+- CWD: `/Users/neowu/projects/Imported-20260403`
+
+## User
+
+_`2026-04-12T06:47:59.961Z`_
+
+我完成這樣的想法，讓他落地執行，開始前我們先思想對齊一下
+
+**網路大神們的終極優化目標就是：「幾乎零手動輸入，Session一結束就自動存好，調閱像翻Obsidian一樣快」**。  
+目前（2026 年 4 月）最絲滑的做法已經不是手動打 `/export` 或 `claude-extract`，而是**結合 Claude Code 原生 Hooks + Shell Alias + Git/Obsidian 自動同步**，整個流程從「打幾個字」變成「完全無感」。
+
+以下是**大神們實際在用的分級優化 workflow**（從簡單到進階，我會標出大概能減少多少輸入）：
+
+### 1. **最基礎絲滑化（5 分鐘搞定，減少 80% 輸入）—— Shell Alias**
+先把常用指令變成超短 alias，放在 `~/.zshrc` 或 `~/.bashrc`：
+
+```bash
+alias cc='claude'                    # 啟動 Claude
+alias cle='claude-extract --recent 3' # 結束後一鍵拉最近 3 筆 MD
+alias cll='claude-extract --list'     # 快速列歷史
+alias clx='claude-extract --extract'  # 後面接數字即可
+```
+
+**使用方式**：
+- 工作結束 → 直接打 `cle` 就自動把今天的新對話轉 MD 放到你指定的資料夾。
+- 想看歷史 → `cll` 後直接選號碼。
+
+這已經比原本少打一堆字，很多大神日常就停在這一步。
+
+### 2. **真正零手動（推薦！）—— Claude Code SessionEnd Hook 自動匯出**
+這是大神最愛的「黑魔法」：**Session一結束（不管是 /exit、/clear 還是關終端）就自動跑 claude-extract 或自訂腳本**。
+
+**Step-by-step 配置（照抄即可）：**
+
+1. 建立腳本 `~/.claude/hooks/auto-export.sh`（給執行權 `chmod +x`）：
+
+```bash
+#!/bin/bash
+# 讀取 Claude 傳進來的 JSON（包含 transcript_path）
+INPUT=$(cat)
+TRANSCRIPT=$(echo "$INPUT" | jq -r '.transcript_path')
+
+# 自動用 claude-extract 轉成 MD（或你自訂的整理腳本）
+claude-extract --extract-latest > ~/claude-vault/$(date +%Y-%m-%d_%H-%M).md
+
+# 可選：同時推到 Obsidian 或 Git
+echo "✅ Auto-exported to ~/claude-vault/" >&2
+```
+
+2. 在 `~/.claude/settings.json`（或專案裡的 `.claude/settings.json`）加入：
+
+```json
+{
+  "hooks": {
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/auto-export.sh",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**效果**：  
+你什麼都不用打，Session結束那一刻，MD 檔案就出現在你的 Obsidian vault 裡。  
+想更進階可以把腳本改成呼叫 `convx sync`（見下面第 3 點）。
+
+### 3. **Git 黨最愛：convx 一鍵 Git-commit 對話（開發者天堂）**
+工具：**convx**（專為 Claude Code + Git 設計）
+
+**安裝**：
+```bash
+uv add --dev convx-ai   # 或 pip install convx-ai
+```
+
+**最絲滑用法**（推薦）：
+```bash
+cd 你的專案
+convx hooks install     # 安裝 pre-commit hook
+```
+
+**效果**：
+- 每次 `git commit` 時，**自動**把本次 Session 的完整對話（Markdown + 隱藏 JSON）commit 到 `.ai/history/` 資料夾。
+- 對話永遠跟程式碼一起版本控制，永遠不會丟。
+- 還附 `convx explore` 一個 TUI 瀏覽器，可以 fuzzy search 所有歷史對話。
+
+這招被很多全職用 Claude Code 寫專案的大神奉為神器，因為「存檔 = commit」完全無感。
+
+### 4. **調閱最方便的終極組合（Obsidian / Logseq 黨）**
+- Hook 自動把 MD 丟進 Obsidian vault。
+- 再裝 Obsidian 的 **Local REST API** 或 **Claude Code 專用插件**，就能在 Claude 裡直接呼叫 `/convo-search xxx` 搜歷史對話。
+- 或用 `convx explore` + fzf 包一個 `clsearch` alias：
+
+```bash
+alias clsearch='convx explore | fzf --preview "cat {}"'
+```
+
+想看某段對話 → `clsearch` → 模糊搜 → Enter 直接開編輯器。
+
+### 大神們真實一天流程（幾乎零輸入）
+1. `cc` 開啟 Session（或直接在專案資料夾打 `claude`）。
+2. 正常 coding / 聊天。
+3. `/exit` 或直接關終端 → **完全自動**：Hook 觸發 → MD 進 vault → Git commit（如果有 pre-commit）。
+4. 隔天想回顧 → `clsearch "refactor database"` 或直接在 Obsidian 全局搜。
+
+這樣一來，**保存 0 輸入、調閱 1~2 輸入**，比原本的 `/export` + 手動 `claude-extract` 快 10 倍以上。
+
+如果你是 **macOS / Linux / Windows WSL**，或主要用 **Obsidian / Git / VS Code**，告訴我你的環境，我可以直接給你完整的一鍵安裝腳本（包含 alias + hook + convx）。  
+想看某個步驟的完整設定檔或自訂腳本，也直接說！這套 workflow 現在就是 2026 年 terminal Claude Code 大神圈的「標準答案」。
+
+## Agent
+
+_`2026-04-12T06:48:20.781Z`_
+
+思想對齊好，我來指出幾個需要確認的點，再問你的環境。
+
+## 哪些是真實可用的
+
+**Claude Code Hooks** — 真實存在，但支援的事件名稱要確認：
+- `PreToolUse`、`PostToolUse`、`Notification`、`Stop` — 有文件記載
+- `SessionEnd` — 這個名稱**未必正確**，可能是 `Stop` 或其他，需要查官方文件
+
+**settings.json hooks 格式** — 真實，但結構細節可能跟上面描述的有出入
+
+## 哪些可能是虛構的
+
+**`claude-extract`** — 我沒有確認這工具真實存在，可能是 AI 捏造的工具名稱
+
+**`convx` / `convx-ai`** — 同上，需要驗證是否真實存在於 PyPI
+
+## 什麼一定能做
+
+- Shell aliases — 純 zshrc，沒問題
+- SessionEnd 等效 hook + 自訂腳本 — **能做，但腳本要自己寫**，不依賴第三方工具
+- Git 自動 commit 對話 — 能做，用 pre-commit hook 自己實現
+- Obsidian vault 同步 — 能做，就是 cp/rsync 到 vault 資料夾
+
+## 我需要知道的
+
+1. **環境**：macOS？用 Homebrew？
+2. **目標 vault 路徑**：Obsidian vault 在哪？有在用 Obsidian 嗎？
+3. **Git 整合**：想要對話跟著專案 commit，還是存到獨立 repo？
+4. **Claude 對話存在哪**：你知道 `~/.claude/` 下的 transcript 結構嗎？
+
+把這些說清楚，我去查實際的 hook 事件名稱和 transcript 路徑結構，然後給你一個基於**真實 API 的**安裝腳本，不用依賴可能不存在的第三方工具。
+
+## User
+
+_`2026-04-12T06:51:40.109Z`_
+
+使用terminal Claude code的大神們，如果有些對話內容不錯，網路大神們都如何保存呢？
+如何讓整個保存的動作更絲滑，更少輸入動作，保存調閱也最方便呢？網路大神們如何優化這整個流程呢？
+我目前使用 mac os 有使用obsidian
+請問GIT整合和github有何不同？網路大神們是不是都讓commit跟著專案呢？
+你建議claude對話存在哪呢？我不知道transcript結構
+
+## Agent
+
+_`2026-04-12T06:59:52.931Z`_
+
+好，我現在看到了你的**真實檔案結構**，可以給你準確的答案了。
+
+---
+
+## 你的對話實際存在哪裡
+
+```
+~/.claude/projects/
+  -Users-neowu-projects-Imported-20260403/   ← 當前這個專案
+    6d4a4caf-xxxx.jsonl                       ← 每個 Session 是一個 JSONL 檔
+    ac8a7a83-xxxx.jsonl
+  -Users-neowu/                               ← 沒有專案目錄時的 session
+    7bade43d-xxxx.jsonl
+```
+
+每行 JSONL 是一個 JSON 事件，user/assistant 訊息、工具呼叫都在裡面。**原始格式不好讀，需要腳本轉成 Markdown**。
+
+---
+
+## Git 和 GitHub 的差別（直接說清楚）
+
+| | Git | GitHub |
+|---|---|---|
+| 是什麼 | **本機**版本控制工具 | **雲端**託管服務 |
+| 存在哪 | 你電腦上的 `.git/` 資料夾 | github.com 的伺服器 |
+| 需要網路 | 不需要 | 需要 |
+| 誰看得到 | 只有你 | 你設定的人 |
+
+**大神們怎麼選**：
+
+- **對話跟著專案 commit** — 適合「這段對話是在解決這個 bug / 功能」的情境，查起來最有脈絡
+- **獨立 vault（Obsidian）** — 適合跨專案的想法、學習筆記，搜尋最方便
+- **兩者都用** — 最常見：Obsidian 存可讀 MD，Git 留完整原始記錄
+
+你有 Obsidian，**我建議主力放 Obsidian**，Git 當備份就好，不用推 GitHub（除非你想雲端備份）。
+
+---
+
+## 真實可行的最小方案（不依賴任何第三方工具）
+
+前面那份「大神 workflow」裡，`claude-extract` 和 `convx` **我無法確認是真實存在的工具**，不要依賴它們。
+
+能確定可以做的：
+
+1. **自己寫一個 JSONL → Markdown 腳本**（Python 或 bash，我可以幫你寫）
+2. **Claude Code `Stop` Hook** 觸發自動轉換（這個 hook 事件是真實的）
+3. **直接 cp 到 Obsidian vault**，不需要任何額外工具
+
+---
+
+## 你想怎麼推進？
+
+A. 先給你看一個**把 JSONL 轉成可讀 Markdown 的腳本**，你確認格式對了再繼續  
+B. 直接**設計整套 hook + 腳本 + Obsidian 整合**，一次到位  
+C. 先**只設 shell alias**，最簡單的絲滑化，5 分鐘搞定
+
+你傾向哪個方向？
+
+## User
+
+_`2026-04-12T07:01:34.231Z`_
+
+我傾向動作更絲滑，更少輸入動作，保存調閱也最方便，思想對齊一下，你怎麼看呢？
+
+## Agent
+
+_`2026-04-12T07:02:01.389Z`_
+
+## 我的真實判斷
+
+先說結論：**「完全零輸入」目前有一個根本障礙需要先面對。**
+
+---
+
+### 障礙：Claude Code 的 Hook 時機問題
+
+Claude Code 的 `Stop` hook 是**每次 Claude 完成一輪回應就觸發**，不是 Session 結束才觸發。一個 Session 裡可能觸發幾十次。沒有一個我能確認的 hook 叫做 `SessionEnd`。
+
+這意味著：
+- 如果用 `Stop` hook → 每次回應後都跑轉換腳本，浪費資源，MD 會一直被覆蓋
+- 如果沒有 SessionEnd → **完全無感自動存**這個前提就需要換方法實現
+
+---
+
+### 真正可靠的「零輸入」替代方案
+
+**macOS `fswatch` 背景監聽**：
+
+```
+fswatch 監聽 ~/.claude/projects/
+  → 偵測到 JSONL 更新超過 N 秒沒有變動（Session 靜止）
+  → 自動觸發轉換腳本 → Markdown 進 Obsidian vault
+```
+
+這個做法：
+- 真正零輸入，不管你怎麼結束 Session（關終端、`/exit`、Command+Q）
+- 不依賴 Claude Code hooks 的細節
+- macOS 原生工具，不需要第三方套件
+
+---
+
+### 調閱方便的核心是 MD 品質
+
+存進 Obsidian 之後，**搜尋好不好用取決於 Markdown 格式**：
+
+- 檔名要有意義：`2026-04-12_refactor-auth-module.md`（靠第一句對話自動命名）
+- 內容要有結構：標題分隔、程式碼區塊正確、工具呼叫要不要保留
+- Obsidian 原生搜尋已經夠好，不需要額外插件
+
+---
+
+### 我建議的實際路線
+
+```
+階段一：寫好 JSONL→MD 轉換腳本（這是最核心的）
+階段二：設 fswatch daemon 自動觸發（真零輸入）
+階段三：確認 Obsidian vault 路徑、檔名格式
+（可選）一個 alias 讓你也能手動觸發
+```
+
+**這樣你得到的是**：對話結束後幾秒內，Obsidian 裡自動出現一個格式乾淨、可搜尋的 MD 檔，你完全不需要做任何事。
+
+---
+
+### 對齊確認
+
+你的 Obsidian vault 在哪個路徑？我去看一下你的 JSONL 完整格式，然後我們從**轉換腳本**開始做，這是整個流程的地基。
+
+## User
+
+_`2026-04-12T07:06:23.305Z`_
+
+不需要真的零輸入，減少輸入即可
+這個流程你覺得合理嗎？
+真實一天流程（幾乎零輸入）
+
+cc 開啟 Session（或直接在專案資料夾打 claude）。
+正常 coding / 聊天。
+/exit 或直接關終端 → 完全自動：Hook 觸發 → MD 進 vault → Git commit（如果有 pre-commit）。
+隔天想回顧 → clsearch "refactor database" 或直接在 Obsidian 全局搜。
+
+## Agent
+
+_`2026-04-12T07:06:52.305Z`_
+
+## 評估這個流程
+
+整體合理，但有一個關鍵細節需要調整。
+
+---
+
+### 問題點：Hook 不是最可靠的觸發方式
+
+Claude Code 的 `Stop` hook 是每次**回應結束**就觸發，不是 `/exit` 時觸發。  
+`/exit` 時是否有對應 hook，我沒有把握。
+
+**更可靠的替代**：把 `cc` 做成 shell function 而不是單純 alias：
+
+```bash
+function cc() {
+    claude "$@"           # claude 執行，你打 /exit 後它就結束
+    export_to_obsidian    # claude 程序結束後，自動跑這行
+}
+```
+
+這個做法：
+- `claude` 一旦退出（不管是 `/exit` 還是 `Ctrl+C`），下一行就自動執行
+- 不依賴任何 hook 機制，100% 可靠
+- 關終端的情況下不會觸發（但你說不需要真的零輸入，這可以接受）
+
+---
+
+### 修正後的流程
+
+```
+cc               → 開啟 Session
+正常工作
+/exit            → claude 退出 → 自動：轉 MD → 進 Obsidian vault
+                   （可選：git commit）
+clsearch xxx     → fzf 模糊搜 vault
+```
+
+這個流程合理，完全可以實現，不需要任何第三方工具。
+
+---
+
+### 還有兩個問題需要你確認
+
+1. **Obsidian vault 路徑**是什麼？（例如 `~/Documents/ObsidianVault`）
+2. **Git commit 那步**你想要嗎？想跟哪個專案綁，還是存到獨立 repo？
+
+確認後我直接開始寫腳本。
+
+## User
+
+_`2026-04-12T07:19:55.598Z`_
+
+對話跟著專案 commit
+vault id 5c609bef63f86bb2
+/Users/neowu/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/2025PARA
+
+## Agent
+
+_`2026-04-12T07:20:06.496Z`_
+
+좋아요. 먼저 JSONL 실제 구조를 확인하고 시작하겠습니다.
+
+## User
+
+_`2026-04-12T07:20:34.779Z`_
+
+[Request interrupted by user for tool use]
+
+## User
+
+_`2026-04-12T07:20:49.604Z`_
+
+討論一下這個專案https://github.com/ZeroSumQuant/claude-conversation-extractor
+
+## Agent
+
+_`2026-04-12T07:23:30.266Z`_
+
+**`claude-extract` 是真實存在的工具**，而且正是我們需要的核心。
+
+---
+
+## 這個工具對你的 workflow 的價值
+
+**它解決了最難的部分**：JSONL 解析和轉 Markdown，不用自己寫。
+
+```bash
+claude-extract --recent 1 --format markdown --output ~/Obsidian/vault/
+```
+
+一行指令，最新一個 Session 就轉好進 vault。
+
+**它有的指令**：
+- `claude-extract --recent 1` — 最新 Session
+- `claude-search "keyword"` — 跨所有對話全文搜尋
+- `claude-start` — 互動式 UI 瀏覽
+
+---
+
+## 回到你的 workflow，現在更清晰了
+
+```bash
+# 安裝
+pipx install claude-conversation-extractor
+
+# ~/.zshrc
+function cc() {
+    claude "$@"
+    # claude 退出後自動跑
+    claude-extract --recent 1 --format markdown \
+        --output "/Users/neowu/Library/Mobile Documents/iCloud~md~obsidian/Documents/2025PARA/Claude/"
+}
+
+alias clsearch='claude-search'
+```
+
+**你的一天流程就變成**：
+1. `cc` 開 Session
+2. 正常工作
+3. `/exit` → 自動轉 MD 進 Obsidian
+4. `clsearch "keyword"` 搜歷史
+
+---
+
+## 還差一塊：Git commit 那步
+
+這個工具本身沒有 Git 整合。需要在 `cc` function 裡加：
+
+```bash
+function cc() {
+    claude "$@"
+    claude-extract --recent 1 --format markdown \
+        --output ".ai/conversations/"   # 存進當前專案
+    git add .ai/conversations/ && git commit -m "chore: add claude session log"
+}
+```
+
+但這有一個問題：**不是每個目錄都是 git repo**，要加判斷。
+
+---
+
+## 你現在要直接開始實作嗎？
+
+確認幾點：
+1. Obsidian 裡你想放在 `2025PARA/` 下的哪個子資料夾？（`Resources/Claude/`？）
+2. Git commit 這步要不要，還是先只做 Obsidian？
+
+## User
+
+_`2026-04-12T07:24:15.859Z`_
+
+你看看這個專案
+https://github.com/pascalwhoop/convx
+
+## Agent
+
+_`2026-04-12T07:25:37.211Z`_
+
+**`convx` 也是真實存在的**，而且比 `claude-extract` 更接近你要的 workflow。
+
+---
+
+## 兩個工具的定位差異
+
+| | `claude-extract` | `convx` |
+|---|---|---|
+| 核心功能 | JSONL → Markdown | 對話 → Git repo |
+| Git 整合 | 無 | **原生支援 pre-commit hook** |
+| 多 AI 來源 | 只有 Claude | Claude / Codex / Cursor / Gemini |
+| 搜尋 | `claude-search` CLI | `convx explore` TUI |
+| 存放位置 | 你指定的資料夾 | 專案內 `.ai/history/` |
+
+---
+
+## `convx` 完整符合你說的「對話跟著專案 commit」
+
+```bash
+# 在專案裡安裝 hook（只需做一次）
+convx hooks install
+
+# 之後每次 git commit 時自動跑 convx sync
+# → 對話存進 .ai/history/<user>/claude/ 
+# → 跟著這次 commit 一起進版本控制
+```
+
+這就是你想要的：存檔 = commit，完全無感。
+
+---
+
+## 你的 workflow 組合建議
+
+```
+convx  → 負責 Git 整合（對話跟著專案）
+claude-extract → 負責 Obsidian 同步（調閱方便）
+```
+
+`cc` function 最終長這樣：
+
+```bash
+function cc() {
+    claude "$@"
+    # 1. 同步進 Obsidian vault
+    claude-extract --recent 1 --format markdown \
+        --output "/Users/neowu/Library/Mobile Documents/iCloud~md~obsidian/Documents/2025PARA/Resources/Claude/"
+    # 2. 同步進專案 git（下次 commit 就帶著走）
+    convx sync
+}
+```
+
+---
+
+## 一個需要確認的點
+
+`convx sync` 要在**專案 git repo 內執行**才有作用。如果你在沒有 git 的目錄開 `cc`，那步會失敗（但不影響 Obsidian 那步）。
+
+要不要在 `cc` 裡加 git 判斷？或者你大部分工作都在 git repo 裡？
+
+## User
+
+_`2026-04-12T07:28:27.572Z`_
+
+大部分都在目錄執行，但有時候會透過ssh 連進去遠端mac mini 執行一些操作，這通常沒有repo
+
+## Agent
+
+_`2026-04-12T07:28:49.560Z`_
+
+好，這個情境要處理兩點：
+
+**1. 沒有 git repo** → `convx sync` 要跳過，不能報錯  
+**2. Mac Mini 的 Obsidian vault 路徑** → iCloud 有同步到 Mac Mini 嗎？
+
+---
+
+## 先確認 Mac Mini 的 vault 狀況
+
+Mac Mini 上 iCloud 有開嗎？路徑是否也有：
+```
+~/Library/Mobile Documents/iCloud~md~obsidian/Documents/2025PARA/
+```
+
+這決定 Obsidian 那步在 Mac Mini 上能不能用。
+
+---
+
+## `cc` function 的防呆設計
+
+不管答案如何，function 都可以寫成**自動偵測、優雅降級**：
+
+```bash
+function cc() {
+    claude "$@"
+
+    # Obsidian 同步：只在 vault 存在時執行
+    VAULT="/Users/neowu/Library/Mobile Documents/iCloud~md~obsidian/Documents/2025PARA/Resources/Claude"
+    if [ -d "$VAULT" ]; then
+        claude-extract --recent 1 --format markdown --output "$VAULT"
+    fi
+
+    # Git 同步：只在 git repo 內執行
+    if git rev-parse --git-dir > /dev/null 2>&1; then
+        convx sync
+    fi
+}
+```
+
+**效果**：
+- 本機有 vault + 在 repo 裡 → 兩個都跑
+- Mac Mini SSH 沒 vault → 跳過 Obsidian，只跑 git（如果有 repo）
+- Mac Mini SSH 沒 vault 也沒 repo → 只是正常退出
+
+---
+
+## 接下來要做的事
+
+1. 確認 Mac Mini vault 路徑
+2. 在兩台機器都裝好工具（`pipx install claude-conversation-extractor` + `uv add convx-ai`）
+3. 寫好 `~/.zshrc` 的 `cc` function 和 `clsearch` alias
+4. 在各個專案 `convx hooks install`
+
+你要開始實作了嗎？先從本機開始。
+
+## User
+
+_`2026-04-12T07:30:18.920Z`_
+
+我幾乎都是使用macbook 本機在開發為主，偶爾遠端連到mac mini的repo修改
+
+## Agent
+
+_`2026-04-12T07:30:26.838Z`_
+
+清楚了。主力在 MacBook，Mac Mini 偶爾用。那設計就很簡單：
+
+**MacBook**：完整 setup（Obsidian + git）  
+**Mac Mini**：最小 setup（只有 git，在 repo 時才跑 convx）
+
+---
+
+開始實作。先確認工具狀態：
+
+## Agent
+
+_`2026-04-12T07:31:02.372Z`_
+
+Homebrew 有了。工具都還沒裝。開始安裝：
+
+## Agent
+
+_`2026-04-12T07:31:29.100Z`_
+
+工具都裝好了。現在把 `cc` function 和 `clsearch` 加進 `~/.zshrc`：
+
+## Agent
+
+_`2026-04-12T07:31:53.833Z`_
+
+確認結果：
+
+## Agent
+
+_`2026-04-12T07:32:01.650Z`_
+
+---
+
+設定完成。你現在的 workflow：
+
+```
+cc                     → 開啟 Claude
+/exit                  → 自動：MD 進 Obsidian + convx sync（在 repo 內時）
+clsearch "keyword"     → 搜尋所有歷史對話
+```
+
+Obsidian 裡會有新資料夾：`2025PARA/Resources/Claude/`
+
+---
+
+**最後一步**：在你的各個專案裡執行一次 `convx hooks install`，之後每次 `git commit` 就會自動把對話帶進版本控制。
+
+要在這個目前的專案試一下嗎？
+
+## User
+
+_`2026-04-12T07:33:12.622Z`_
+
+該如何測試呢？
+
+## Agent
+
+_`2026-04-12T07:33:24.714Z`_
+
+三個部分分開測，這樣知道哪裡出問題：
+
+**第 1 步：reload zshrc，確認 function 載入**
+
+在你的 terminal 執行：
+```bash
+source ~/.zshrc
+type cc
+```
+
+應該看到 `cc is a shell function`。
+
+---
+
+**第 2 步：測試 claude-extract 能不能讀到對話**
+
+```bash
+claude-extract --list
+```
+
+應該列出你的歷史 sessions。確認有東西。
+
+---
+
+**第 3 步：手動測試 export 到 vault**
+
+```bash
+claude-extract --recent 1 --format markdown \
+  --output "/Users/neowu/Library/Mobile Documents/iCloud~md~obsidian/Documents/2025PARA/Resources/Claude"
+```
+
+然後去 Obsidian 看 `Resources/Claude/` 裡有沒有新的 MD 檔出現。
+
+---
+
+**第 4 步：測試 convx（在任何一個 git repo 裡執行）**
+
+```bash
+cd ~/你的某個專案
+convx sync
+ls .ai/
+```
+
+---
+
+**第 5 步：測試 clsearch**
+
+```bash
+clsearch "hook"
+```
+
+應該能搜到包含 "hook" 的對話。
+
+---
+
+從第 1 步開始，遇到問題貼錯誤訊息給我。
+
+## User
+
+_`2026-04-12T07:34:31.569Z`_
+
+你直接幫我測試執行，並且一份完整的操作手冊給我日後參考使用
+
+## Agent
+
+_`2026-04-12T07:35:40.906Z`_
+
+全部測試通過。現在寫操作手冊：
+
+## Agent
+
+_`2026-04-12T07:36:19.512Z`_
+
+---
+
+測試結果摘要：
+
+| 測試項目 | 結果 |
+|---------|------|
+| `cc` function 載入 | ✅ |
+| `clsearch` alias 載入 | ✅ |
+| `claude-extract --list` | ✅ 找到 45 個 sessions |
+| 匯出 MD 到 Obsidian vault | ✅ 正確格式，已出現在 vault |
+| `clsearch "obsidian"` | ✅ 找到 14 筆結果 |
+| `convx sync`（無 repo） | ✅ 優雅跳過，不報錯 |
+| `convx sync`（有 repo） | ✅ 正常執行（過濾非該專案的對話，行為正確） |
+
+操作手冊已存進 Obsidian：`Resources/Claude/CLAUDE-WORKFLOW.md`
+
+唯一剩下的動作：去你的各個專案執行一次 `convx hooks install`，之後 git commit 就會自動帶對話。
+
+## User
+
+_`2026-04-12T07:50:56.334Z`_
+
+一個對話結束，我該輸入什麼呢？
+
+## Agent
+
+_`2026-04-12T07:50:59.639Z`_
+
+`/exit` 就好。
+
+Claude 結束後 `cc` function 會自動接著跑 export。你會看到：
+
+```
+→ Obsidian vault updated
+→ convx sync done   ← 只在 git repo 內出現
+```
+
+## User
+
+_`2026-04-12T07:54:00.129Z`_
+
+neowu@neowus-MacBook-Air Imported-20260403 % convx hooks install
+Usage: convx hooks install [OPTIONS]
+Try 'convx hooks install --help' for help.
+╭─ Error ─────────────────────────────────────────────────────────────────────────────────────────╮
+│ Invalid value: Not a git repository (missing .git): /Users/neowu/projects/Imported-20260403     │
+╰─────────────────────────────────────────────────────────────────────────────────────────────────╯
+neowu@neowus-MacBook-Air Imported-20260403 %
+
+## Agent
+
+_`2026-04-12T07:54:04.028Z`_
+
+這個目錄本身不是 git repo，所以 `convx hooks install` 裝不了，這是正常的。
+
+去你有 `.git` 的專案執行就好：
+
+```bash
+cd ~/projects/CusTalkPro
+convx hooks install
+
+cd ~/projects/ShippingBonus
+convx hooks install
+```
+
+之後在那些專案裡工作，`git commit` 時對話就會自動跟著進版本控制。
+
+## User
+
+_`2026-04-12T07:54:53.003Z`_
+
+一個資料如果沒有.git 如何讓他有？為什麼要有？
+
+## Agent
+
+_`2026-04-12T07:55:02.711Z`_
+
+## 為什麼要有 `.git`
+
+`.git` 是 Git 版本控制的核心資料夾，有了它你就能：
+
+- **回溯**：任何時間點的程式碼都能還原
+- **比較**：看到每次修改了什麼
+- **記錄**：知道當時為什麼這樣改（commit message）
+- **對話跟著走**：`convx` 才能把 Claude 對話和程式碼綁在一起
+
+對你來說最直接的好處：**出了問題可以回到之前的版本**。
+
+---
+
+## 如何讓一個目錄有 `.git`
+
+```bash
+cd ~/projects/Imported-20260403
+git init
+git add .
+git commit -m "init"
+```
+
+這樣就建立了一個**本機 git repo**，不需要推到 GitHub。
+
+---
+
+## 要不要推到 GitHub？
+
+| | 只有本機 git | + GitHub |
+|---|---|---|
+| 版本控制 | ✅ | ✅ |
+| 雲端備份 | ❌ | ✅ |
+| 電腦壞掉 | 全部不見 | 安全 |
+| 設定難度 | 一行指令 | 多幾步 |
+
+你的 `Imported-20260403` 是什麼性質的專案？如果只是實驗性的，本機 git 就夠了。
