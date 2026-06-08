@@ -39,8 +39,8 @@
     <meta property="og:title" content="{{ article.title | strip_html | escape }}">
     <meta property="og:url" content="{{ canonical_url }}">
     {% if article.image_url %}
-      <meta property="og:image" content="{{ article.image_url | img_url: 'original' }}">
-      <meta property="og:image:secure_url" content="{{ article.image_url | img_url: 'original' }}">
+      <meta property="og:image" content="{{ article.image_url | img_url: '1200x630' }}">
+      <meta property="og:image:secure_url" content="{{ article.image_url | img_url: '1200x630' }}">
     {% endif %}
 {% elsif template contains 'blog'%}
     <meta property="og:type" content="blog">
@@ -115,14 +115,14 @@
 {% elsif template contains 'product' %}
   <meta name="twitter:title" content="{{ product.title | strip_html | escape }}">
   <meta name="twitter:description" content="{{ product.description | strip_html | truncate: 200, '' | escape }}">
-  <meta name="twitter:image" content="{{ product | img_url: 'large' }}">
+  <meta name="twitter:image" content="{{ product | img_url: '1200x630' }}">
   <meta name="twitter:image:width" content="480">
   <meta name="twitter:image:height" content="480">
 {% elsif template contains 'article' %}
   <meta name="twitter:title" content="{{ article.title | strip_html | escape }}">
   <meta name="twitter:description" content="{{ article.description | strip_html | truncate: 200, '' | escape }}">
   {% if article.image %}
-    <meta property="twitter:image" content="{{ article | img_url: 'original' }}">
+    <meta property="twitter:image" content="{{ article | img_url: '1200x630' }}">
   {% endif %}
 {% elsif template contains 'blog' %}
   <meta name="twitter:title" content="{{ blog.title | strip_html | escape }}">

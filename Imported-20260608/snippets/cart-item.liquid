@@ -1,7 +1,7 @@
 <tr class="cart-item" id="CartItem-{{item.id}}{{forloop.index}}">
   <td class="cart-item__media">
      <a href="{{ item.url }}">
-       <img class="cart-item__image" src="{{ item.image_url }}" alt="{{ item.title | escape }}" loading="lazy" width="100" height="100">
+       <img class="cart-item__image" src="{{ item.image_url | img_url: '200x200', crop: 'center' }}" alt="{{ item.title | escape }}" loading="lazy" width="100" height="100">
      </a>
   </td>
   <td class="cart-item__details">
@@ -55,7 +55,7 @@
             {% for component in item.item_components %}
               <li class="product-bundle__item">
                 <div class="product-bundle__image">
-                  <img class="cart-item__image" src="{{ component.image_url }}" alt="{{ component.product_name | escape }}" loading="lazy" width="50" height="50">
+                  <img class="cart-item__image" src="{{ component.image_url | img_url: '100x100', crop: 'center' }}" alt="{{ component.product_name | escape }}" loading="lazy" width="50" height="50">
                 </div>
                 <div class="product-bundle__details">
                   <div class="product-bundle__name break">{{ component.quantity }} x {{ component.product_name | escape }}</div>

@@ -43,7 +43,7 @@
                       {% if featured_variant.featured_image.type == "Youtube" %}
                         <iframe width="90%" height="320px" src="https://www.youtube.com/embed/{{ featured_variant.featured_image.id }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                       {% else %}
-                        <img id="main-image" class="js-image-modal-toggle" src="{{ featured_variant.featured_image.src | img_url: 'social-share' }}" alt="{{ featured_variant.featured_image.alt | escape }}" width="100%" loading="lazy">
+                        <img id="main-image" class="js-image-modal-toggle" src="{{ featured_variant.featured_image.src | img_url: '1024x' }}" alt="{{ featured_variant.featured_image.alt | escape }}" width="100%" loading="lazy">
                       {% endif %}
                     </li>
                 {% endif %}
@@ -53,7 +53,7 @@
                       {% if image.type == "Youtube" %}
                         <iframe width="90%" height="320px" src="https://www.youtube.com/embed/{{ image.id }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                       {% else %}
-                        <img src="{{ image.src | img_url: 'social-share' }}" alt="{{ image.alt | escape }}" width="100%" loading="lazy" class="js-image-modal-toggle">
+                        <img src="{{ image.src | img_url: '1024x' }}" alt="{{ image.alt | escape }}" width="100%" loading="lazy" class="js-image-modal-toggle">
                       {% endif %}
                     </li>
                   {% endif %}

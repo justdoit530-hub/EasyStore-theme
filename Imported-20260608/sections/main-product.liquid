@@ -28,7 +28,7 @@
                   {% if image.type == "Youtube" %}
                     <iframe width="90%" height="320px" src="https://www.youtube.com/embed/{{ image.id }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                   {% else %}
-                    <img src="{{ image.src | img_url: 'social-share' }}" alt="{{ image.alt | escape }}" width="100%" loading="lazy" class="js-image-modal-toggle">
+                    <img src="{{ image.src | img_url: '1024x' }}" alt="{{ image.alt | escape }}" width="100%" loading="lazy" class="js-image-modal-toggle">
                   {% endif %}
                 </li>
               {% endfor %}
@@ -82,7 +82,7 @@
               <div class="product_upsell-box">
                 {% if block.settings.image and block.settings.image != '' %}
                   <div class="product_upsell-icon">
-                    <img src="{{ block.settings.image }}" alt="{{ block.settings.text }} | {{ shop.name }}">
+                    <img src="{{ block.settings.image | img_url: '80x80' }}" alt="{{ block.settings.text }} | {{ shop.name }}">
                   </div>
                 {% endif %}
                 {% if block.settings.text != '' %}

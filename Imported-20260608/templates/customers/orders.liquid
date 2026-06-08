@@ -143,7 +143,7 @@
                           {% if item.image == null %}
                             <img src="/assets/images/products/no_image.png">
                           {% else %}
-                            <img src="{{ item.image }}" alt="{{ item.title | escape }}">
+                            <img src="{{ item.image | img_url: '100x100', crop: 'center' }}" alt="{{ item.title | escape }}">
                           {% endif %}
 
                           <span class="image-overlay-qty {% if index == 5 and remaining_items > 0 %}desktop-show{% endif %} {% if index == 2 and remaining_items > 0 %}mobile-show{% endif %}">

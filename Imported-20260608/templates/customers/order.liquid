@@ -114,7 +114,7 @@
               <div class="d-flex gap-x-2">
                 <div class="media media--square flex-shrink-0" style="width: 100px; height: 100px; padding-bottom: 0; overflow: visible;">
                   <a href="{{ line_item.product.url }}">
-                    <img src="{{ line_item.image_url }}" alt="{{ line_item.product_name | escape }}">
+                    <img src="{{ line_item.image_url | img_url: '200x200', crop: 'center' }}" alt="{{ line_item.product_name | escape }}">
                     <div class="product-qty-badge">{{ line_item.quantity }}</div>
                   </a>
                 </div>

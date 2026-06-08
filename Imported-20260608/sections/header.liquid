@@ -632,9 +632,9 @@
       {% if section.settings.logo %}
         <a href="/" class="header__heading-link link link--text focus-inset" itemprop="url">
           {% if section.settings.transparent_header %}
-            <img src="{{ section.settings.logo_secondary }}" class="header__heading-logo header__logo_secondary" alt="{{ shop.name }}" loading="eager" fetchpriority="high">
+            <img src="{{ section.settings.logo_secondary | img_url: '300x' }}" class="header__heading-logo header__logo_secondary" alt="{{ shop.name }}" loading="eager" fetchpriority="high">
           {% endif %}
-          <img src="{{ section.settings.logo }}" class="header__heading-logo" alt="{{ shop.name }}" loading="eager" fetchpriority="high" itemprop="logo">
+          <img src="{{ section.settings.logo | img_url: '300x' }}" class="header__heading-logo" alt="{{ shop.name }}" loading="eager" fetchpriority="high" itemprop="logo">
         </a>
       {% else %}
         <h1 class="header__heading">

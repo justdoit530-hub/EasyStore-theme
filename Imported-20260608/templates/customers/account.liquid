@@ -327,7 +327,7 @@
                     {% if item.image == null %}
                       <img src="/assets/images/products/no_image.png">
                     {% else %}
-                      <img src="{{ item.image }}">
+                      <img src="{{ item.image | img_url: '100x100', crop: 'center' }}">
                     {% endif %}
                   </div>
                 </div>
