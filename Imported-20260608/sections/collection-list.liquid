@@ -1,3 +1,4 @@
+{%- if section.settings.section_enabled -%}
 <link
   rel="preload"
   href="{{ 'component-card.css' | asset_url }}"
@@ -320,7 +321,7 @@
     }
   }
 </script>
-
+{%- endif -%}
 
 {% schema %}
   {
@@ -333,6 +334,12 @@
     },
     "max_blocks": 6,
     "settings": [
+    {
+      "type": "checkbox",
+      "id": "section_enabled",
+      "label": { "en_US": "Enable section", "zh_TW": "啟用此區塊", "zh_CN": "启用此区块", "ms_MY": "Aktifkan bahagian" },
+      "default": true
+    },
       {
         "type": "text",
         "id": "title",

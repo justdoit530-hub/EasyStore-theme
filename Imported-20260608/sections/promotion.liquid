@@ -1,3 +1,4 @@
+{%- if section.settings.section_enabled -%}
 <link rel="preload" href="{{ 'section-promotion.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 
 <style>
@@ -59,7 +60,7 @@
     {% endfor %}
       </div>
 </div>
-
+{%- endif -%}
 
 {% schema %}
 {
@@ -70,6 +71,12 @@
       "type": "banner",
       "name": { "en_US": "Banner", "zh_TW": "橫幅區塊", "zh_CN": "横幅区块", "ms_MY": "Banner" },
       "settings": [
+    {
+      "type": "checkbox",
+      "id": "section_enabled",
+      "label": { "en_US": "Enable section", "zh_TW": "啟用此區塊", "zh_CN": "启用此区块", "ms_MY": "Aktifkan bahagian" },
+      "default": true
+    },
         {
           "type": "color",
           "id": "color_promotion_background",

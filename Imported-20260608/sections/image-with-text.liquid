@@ -1,3 +1,4 @@
+{%- if section.settings.section_enabled -%}
 <link rel="preload" href="{{ 'section-image-with-text.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 
 <style>
@@ -36,12 +37,19 @@
     {% endif %}
   </div>
 </div>
+{%- endif -%}
 
 {% schema %}
 {
   "name": { "en_US": "Image with text", "zh_TW": "文字與圖片", "zh_CN": "文字与图片", "ms_MY": "Imej dengan Teks" },
   "max_blocks": 6,
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "section_enabled",
+      "label": { "en_US": "Enable section", "zh_TW": "啟用此區塊", "zh_CN": "启用此区块", "ms_MY": "Aktifkan bahagian" },
+      "default": true
+    },
     {
       "type": "image",
       "id": "image",

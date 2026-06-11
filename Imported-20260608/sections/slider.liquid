@@ -1,3 +1,4 @@
+{%- if section.settings.section_enabled -%}
 <link rel="preload" href="{{ 'splide.min.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <link rel="preload" href="{{ 'component-slider.css?v2' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 
@@ -93,13 +94,19 @@
   } );
     
 </script>
-
+{%- endif -%}
 
 {% schema %}
 {
   "name": { "en_US": "Slider", "zh_TW": "圖片輪播", "zh_CN": "图片轮播", "ms_MY": "slaid" },
   "max_blocks": 6,
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "section_enabled",
+      "label": { "en_US": "Enable section", "zh_TW": "啟用此區塊", "zh_CN": "启用此区块", "ms_MY": "Aktifkan bahagian" },
+      "default": true
+    },
     {
       "type": "select",
       "id": "autoplay",

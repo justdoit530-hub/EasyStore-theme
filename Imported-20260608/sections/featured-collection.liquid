@@ -1,3 +1,4 @@
+{%- if section.settings.section_enabled -%}
 <link
   rel="preload"
   href="{{ 'component-price.css' | asset_url }}"
@@ -167,6 +168,7 @@
   {% endif %}
 
 </div>
+{%- endif -%}
 
 {% schema %}
   {
@@ -179,6 +181,12 @@
     "tag": "section",
     "class": "spaced-section",
     "settings": [
+    {
+      "type": "checkbox",
+      "id": "section_enabled",
+      "label": { "en_US": "Enable section", "zh_TW": "啟用此區塊", "zh_CN": "启用此区块", "ms_MY": "Aktifkan bahagian" },
+      "default": true
+    },
       {
         "type": "text",
         "id": "title",

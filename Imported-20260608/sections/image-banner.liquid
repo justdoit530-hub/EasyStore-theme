@@ -1,3 +1,4 @@
+{%- if section.settings.section_enabled -%}
 <link rel="preload" href="{{ 'section-image-banner.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 
 <style>
@@ -78,11 +79,18 @@
     </div>
   </div>
 </div>
+{%- endif -%}
 
 {% schema %}
 {
   "name": { "en_US": "Image Banner", "zh_TW": "圖面橫幅", "zh_CN": "图面横幅", "ms_MY": "Sepanduk imej" },
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "section_enabled",
+      "label": { "en_US": "Enable section", "zh_TW": "啟用此區塊", "zh_CN": "启用此区块", "ms_MY": "Aktifkan bahagian" },
+      "default": true
+    },
     {
       "type": "image",
       "id": "image",

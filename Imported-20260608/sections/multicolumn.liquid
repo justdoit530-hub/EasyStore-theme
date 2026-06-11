@@ -1,3 +1,4 @@
+{%- if section.settings.section_enabled -%}
 <link rel="preload" href="{{ 'section-multicolumn.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <link rel="preload" href="{{ 'component-slider.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <style>
@@ -88,12 +89,19 @@
     </div>
   </div>
 </div>
+{%- endif -%}
 
 {% schema %}
 {
   "name": { "en_US": "Multicolumn", "zh_TW": "多元格框", "zh_CN": "多元格框", "ms_MY": "Berbilang lajur" },
   "max_blocks": 6,
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "section_enabled",
+      "label": { "en_US": "Enable section", "zh_TW": "啟用此區塊", "zh_CN": "启用此区块", "ms_MY": "Aktifkan bahagian" },
+      "default": true
+    },
     {
       "type": "text",
       "id": "title",

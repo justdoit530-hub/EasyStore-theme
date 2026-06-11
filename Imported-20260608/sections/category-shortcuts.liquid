@@ -1,3 +1,4 @@
+{%- if section.settings.section_enabled -%}
 <style>
   .category-shortcuts {
     padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
@@ -127,12 +128,19 @@
   </div>
 </div>
 {% endif %}
+{%- endif -%}
 
 {% schema %}
 {
   "name": { "en_US": "Category Shortcuts", "zh_TW": "分類圖示捷徑" },
   "max_blocks": 12,
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "section_enabled",
+      "label": { "en_US": "Enable section", "zh_TW": "啟用此區塊", "zh_CN": "启用此区块", "ms_MY": "Aktifkan bahagian" },
+      "default": true
+    },
     {
       "type": "text",
       "id": "title",

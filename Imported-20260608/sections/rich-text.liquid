@@ -1,3 +1,4 @@
+{%- if section.settings.section_enabled -%}
 <link rel="preload" href="{{ 'component-rte.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <link rel="preload" href="{{ 'section-rich-text.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 
@@ -18,6 +19,7 @@
     {% endfor %}
   </div>
 </div>
+{%- endif -%}
 
 {% schema %}
 {
@@ -29,6 +31,12 @@
       "name": { "en_US": "Heading", "zh_TW": "標題", "zh_CN": "标题", "ms_MY": "Tajuk" },
       "limit": 1,
       "settings": [
+    {
+      "type": "checkbox",
+      "id": "section_enabled",
+      "label": { "en_US": "Enable section", "zh_TW": "啟用此區塊", "zh_CN": "启用此区块", "ms_MY": "Aktifkan bahagian" },
+      "default": true
+    },
         {
           "type": "text",
           "id": "heading",

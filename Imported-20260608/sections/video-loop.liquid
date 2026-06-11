@@ -1,3 +1,4 @@
+{%- if section.settings.section_enabled -%}
 <link rel="preload" href="{{ 'component-deferred-media.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <link rel="preload" href="{{ 'section-video.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 
@@ -143,12 +144,19 @@
   function onPlayerStateChange(event) {
   }
 </script>
+{%- endif -%}
 
 {% schema %}
 {
   "name": { "en_US": "Video loop", "zh_TW": "影片循環", "zh_CN": "影片循环", "ms_MY": "Video loop" },
   "tag": "section",
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "section_enabled",
+      "label": { "en_US": "Enable section", "zh_TW": "啟用此區塊", "zh_CN": "启用此区块", "ms_MY": "Aktifkan bahagian" },
+      "default": true
+    },
     {
       "label": { "en_US": "Youtube Video URL", "zh_TW": "YouTube 影片連結", "zh_CN": "Youtube 影片连结", "ms_MY": "Youtube Video URL" },
       "type": "text",

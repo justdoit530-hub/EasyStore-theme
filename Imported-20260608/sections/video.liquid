@@ -1,3 +1,4 @@
+{%- if section.settings.section_enabled -%}
 <link rel="preload" href="{{ 'component-deferred-media.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <link rel="preload" href="{{ 'section-video.css' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
 
@@ -27,6 +28,7 @@
     <iframe data-video-id="{{ section.settings.video_url }}" class="js-youtube" allow="autoplay; encrypted-media" allowfullscreen></iframe>
   </deferred-media>
 </div>
+{%- endif -%}
 
 {% schema %}
 {
@@ -34,6 +36,12 @@
   "tag": "section",
   "class": "spaced-section spaced-section--full-width",
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "section_enabled",
+      "label": { "en_US": "Enable section", "zh_TW": "啟用此區塊", "zh_CN": "启用此区块", "ms_MY": "Aktifkan bahagian" },
+      "default": true
+    },
     {
       "type": "text",
       "id": "heading",
